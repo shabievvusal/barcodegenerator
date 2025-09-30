@@ -186,13 +186,6 @@ namespace BarcodeGenerator.Controllers
 
             try
             {
-                var uploadsPath = GetUploadsPath();
-                var excelFiles = Directory.GetFiles(uploadsPath, "products.*");
-
-                if (excelFiles.Length == 0)
-                    return Ok(new { Sap = string.Empty, RelatedProducts = new List<Product>() });
-
-                var filePath = excelFiles[0];
                 // Поиск по EAN в БД (нормализуем как раньше)
                 var normalized = barcode.Replace(" ", "").Replace("-", "").Trim().ToUpperInvariant();
                 // Строгое совпадение по нормализованному EAN
