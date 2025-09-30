@@ -185,10 +185,10 @@ const handleSearch = async (searchValue, searchType = 'barcode') => {
         />
 
         {message && (
-          <div className={`message ${message.includes('загружено') || message.includes('удален') || message.includes('изменена') ? 'success' : 'error'}`}>
+          <div className={`message ${message.includes('загружено') || message.includes('удален') || message.includes('изменена') || message.includes('изменен') ? 'success' : 'error'}`}>
             <div className="message-content">
               <span className="message-icon">
-                {message.includes('загружено') || message.includes('удален') || message.includes('изменена') ? '✅' : '❌'}
+                {message.includes('загружено') || message.includes('удален') || message.includes('изменена') || message.includes('изменен') ? '✅' : '❌'}
               </span>
               <span className="message-text">{message}</span>
             </div>
