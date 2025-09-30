@@ -7,6 +7,7 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [fileInfo, setFileInfo] = useState(null);
+  const [saveMessage, setSaveMessage] = useState('');
 
   // Функции для работы с настройками
   const saveSettings = useCallback(() => {
@@ -18,6 +19,8 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
     };
     localStorage.setItem('barcodeGeneratorSettings', JSON.stringify(settings));
     console.log('✅ Настройки сохранены');
+    setSaveMessage('✅ Настройки сохранены!');
+    setTimeout(() => setSaveMessage(''), 3000);
   }, [defaultPrintType, qrSize, code128Size, textSize]);
 
   const loadSettings = useCallback(() => {
@@ -34,12 +37,12 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
     return null;
   }, []);
 
-  // Загружаем настройки при открытии модального окна
+  // Загружаем настройки только при первом открытии модального окна
   useEffect(() => {
     if (isOpen) {
       const savedSettings = loadSettings();
       if (savedSettings) {
-        // Применяем сохраненные настройки
+        // Применяем сохраненные настройки только если они отличаются
         if (savedSettings.defaultPrintType && savedSettings.defaultPrintType !== defaultPrintType) {
           onPrintTypeChange(savedSettings.defaultPrintType);
         }
@@ -54,7 +57,7 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
         }
       }
     }
-  }, [isOpen, loadSettings, defaultPrintType, qrSize, code128Size, textSize, onPrintTypeChange, onQrSizeChange, onCode128SizeChange, onTextSizeChange]);
+  }, [isOpen]); // Убираем зависимости, чтобы избежать бесконечного цикла
 
   const handleFileSelect = async (file) => {
     if (!file) return;
@@ -367,7 +370,30 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
           )}
 
           {/* Кнопка сохранения настроек */}
-          <div className="settings-actions" style={{marginTop: '20px', padding: '15px', borderTop: '1px solid #e2e8f0'}}>
+          <div className="settings-actions" style={{
+            position: 'sticky',
+            bottom: '0',
+            background: 'white',
+            marginTop: '20px',
+            padding: '15px',
+            borderTop: '1px solid #e2e8f0',
+            zIndex: 10
+          }}>
+            {saveMessage && (
+              <div style={{
+                background: 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)',
+                color: '#047857',
+                padding: '8px 12px',
+                borderRadius: '6px',
+                fontSize: '14px',
+                fontWeight: '600',
+                textAlign: 'center',
+                marginBottom: '10px',
+                border: '1px solid #10b981'
+              }}>
+                {saveMessage}
+              </div>
+            )}
             <button 
               className="save-settings-btn"
               onClick={saveSettings}
@@ -384,7 +410,9 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
                 transition: 'all 0.2s ease',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px'
+                gap: '8px',
+                width: '100%',
+                justifyContent: 'center'
               }}
               onMouseOver={(e) => {
                 e.target.style.transform = 'translateY(-1px)';
