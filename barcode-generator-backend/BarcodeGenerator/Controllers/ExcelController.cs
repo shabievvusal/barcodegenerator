@@ -193,13 +193,7 @@ namespace BarcodeGenerator.Controllers
                 if (found == null)
                     return Ok(new { Sap = string.Empty, RelatedProducts = new List<Product>() });
                 var sap = found.SapArticle;
-                // Группируем по количеству штук и берем по одному товару на каждое количество
-                var related = _db.Products
-                    .Where(p => p.SapArticle == sap)
-                    .GroupBy(p => p.Counter)
-                    .Select(g => g.First())
-                    .OrderBy(p => p.Counter)
-                    .ToList();
+                var related = _db.Products.Where(p => p.SapArticle == sap).ToList();
                 return Ok(new { Sap = sap, RelatedProducts = related });
             }
             catch (Exception ex)
@@ -218,13 +212,7 @@ namespace BarcodeGenerator.Controllers
 
             try
             {
-                // Группируем по количеству штук и берем по одному товару на каждое количество
-                var relatedProducts = _db.Products
-                    .Where(p => p.SapArticle == sap)
-                    .GroupBy(p => p.Counter)
-                    .Select(g => g.First())
-                    .OrderBy(p => p.Counter)
-                    .ToList();
+                var relatedProducts = _db.Products.Where(p => p.SapArticle == sap).ToList();
                 return Ok(new { RelatedProducts = relatedProducts });
             }
             catch (Exception ex)
