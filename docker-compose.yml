@@ -11,6 +11,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=barcode_db;Username=postgres;Password=postgres
     networks:
       - app-network
     restart: unless-stopped
@@ -19,8 +20,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    environment:
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=barcode_db;Username=postgres;Password=postgres
     depends_on:
       - db
 
