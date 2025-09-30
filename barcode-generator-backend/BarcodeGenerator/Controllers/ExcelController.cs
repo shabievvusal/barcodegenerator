@@ -82,8 +82,36 @@ namespace BarcodeGenerator.Controllers
             {
                 var uploadsPath = GetUploadsPath();
 
-                foreach (var existingFile in Directory.GetFiles(uploadsPath, "products.*"))
-                    System.IO.File.Delete(existingFile);
+                var files = Directory.GetFiles(uploadsPath, "products.*");
+                if (files.Length == 0)
+                {
+                    return Ok(new { Success = true, Message = "Файлы не найдены" });
+                }
+
+                foreach (var existingFile in files)
+                {
+                    try
+                    {
+                        // Устанавливаем права на запись перед удалением
+                        var fileInfo = new FileInfo(existingFile);
+                        fileInfo.Attributes = FileAttributes.Normal;
+                        System.IO.File.Delete(existingFile);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        // Если нет прав, пытаемся изменить атрибуты
+                        try
+                        {
+                            File.SetAttributes(existingFile, FileAttributes.Normal);
+                            System.IO.File.Delete(existingFile);
+                        }
+                        catch (Exception innerEx)
+                        {
+                            Console.WriteLine($"Не удалось удалить файл {existingFile}: {innerEx.Message}");
+                            return StatusCode(500, new { Success = false, Message = $"Не удалось удалить файл: {innerEx.Message}" });
+                        }
+                    }
+                }
 
                 return Ok(new { Success = true, Message = "Файл успешно удален" });
             }

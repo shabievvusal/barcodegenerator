@@ -29,13 +29,14 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Создаем директорию для загрузок
-RUN mkdir -p /app/wwwroot/uploads
-
 # Устанавливаем права для Alpine
 RUN addgroup -g 1001 -S appgroup && \
-    adduser -S appuser -u 1001 -G appgroup && \
-    chown -R appuser:appgroup /app
+    adduser -S appuser -u 1001 -G appgroup
+
+# Создаем директорию для загрузок и устанавливаем права
+RUN mkdir -p /app/wwwroot/uploads && \
+    chown -R appuser:appgroup /app && \
+    chmod -R 755 /app/wwwroot/uploads
 USER appuser
 
 ENTRYPOINT ["dotnet", "BarcodeGenerator.dll"]
