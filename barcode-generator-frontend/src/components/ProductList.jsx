@@ -175,8 +175,8 @@ const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, default
             {product.isUnknown ? (
               <button
                 className="product-button minimal"
-                onClick={() => handleBarcodeClick(product, 'code128')}
-                title="Клик для печати штрихкода"
+                onClick={() => handleBarcodeClick(product, defaultPrintType)}
+                title={`Клик для печати ${defaultPrintType === 'qr' ? 'QR-кода' : 'Code-128'}`}
               >
                 <div className="button-content minimal">
                   <div className="ean-code minimal">{product.ean}</div>
