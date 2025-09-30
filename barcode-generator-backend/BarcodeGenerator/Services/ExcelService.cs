@@ -29,7 +29,7 @@ namespace BarcodeGenerator.Services
                         {
                             SapArticle = row.Cell(1).GetValue<string>().Trim(),        // Артикул SAP
                             MaterialDescription = row.Cell(7).GetValue<string>().Trim(), // Краткий текст материала
-                            EAN = ean,                                                  // EAN
+                            EAN = ean.Replace(" ", string.Empty).Replace("-", string.Empty).Trim().ToUpperInvariant(), // нормализованный EAN
                             Counter = row.Cell(5).GetValue<int>()                        // Кол-во
                         };
 

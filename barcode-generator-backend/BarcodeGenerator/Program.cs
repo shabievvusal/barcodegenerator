@@ -1,5 +1,6 @@
 using BarcodeGenerator.Services;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ExcelService>();
+builder.Services.AddSingleton<ProductCatalog>();
+
+// PostgreSQL connection
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? Environment.GetEnvironmentVariable("POSTGRES_CONNECTION")
+    ?? "Host=localhost;Port=5432;Database=barcode_db;Username=postgres;Password=postgres";
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // Configure file upload limits
 builder.Services.Configure<FormOptions>(options =>

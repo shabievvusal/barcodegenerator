@@ -10,12 +10,16 @@ namespace BarcodeGenerator.Controllers
     {
         private readonly ExcelService _excelService;
         private readonly IWebHostEnvironment _environment;
+        private readonly ProductCatalog _catalog;
+        private readonly AppDbContext _db;
         private const string UploadsFolder = "uploads";
 
-        public ExcelController(ExcelService excelService, IWebHostEnvironment environment)
+        public ExcelController(ExcelService excelService, IWebHostEnvironment environment, ProductCatalog catalog, AppDbContext db)
         {
             _excelService = excelService;
             _environment = environment;
+            _catalog = catalog;
+            _db = db;
         }
 
         private string GetUploadsPath()
@@ -85,6 +89,18 @@ namespace BarcodeGenerator.Controllers
                 }
 
                 var products = _excelService.ReadProductsFromExcel(filePath);
+                // Импортируем в БД: очищаем и вставляем
+                var existing = _db.Products.ToList();
+                if (existing.Count > 0)
+                {
+                    _db.Products.RemoveRange(existing);
+                    _db.SaveChanges();
+                }
+                _db.Products.AddRange(products);
+                _db.SaveChanges();
+
+                // Обновляем кэш по желанию (оставляем для обратной совместимости)
+                _catalog.Refresh(filePath);
 
                 return Ok(new FileUploadResponse
                 {
@@ -151,8 +167,8 @@ namespace BarcodeGenerator.Controllers
                     return Ok(new List<Product>()); // вместо 500 — пустой список
 
                 var filePath = excelFiles[0];
-                var products = _excelService.ReadProductsFromExcel(filePath);
-
+                // Возвращаем из БД
+                var products = _db.Products.ToList();
                 return Ok(products);
             }
             catch (Exception ex)
@@ -177,29 +193,14 @@ namespace BarcodeGenerator.Controllers
                     return Ok(new { Sap = string.Empty, RelatedProducts = new List<Product>() });
 
                 var filePath = excelFiles[0];
-                var products = _excelService.ReadProductsFromExcel(filePath);
-
-                // Нормализуем штрихкод для поиска (убираем пробелы и дефисы)
-                var normalizedBarcode = barcode.Replace(" ", "").Replace("-", "");
-
-                // Находим товар по EAN
-                var foundProduct = products.FirstOrDefault(p =>
-                    !string.IsNullOrEmpty(p.EAN) &&
-                    p.EAN.Replace(" ", "").Replace("-", "") == normalizedBarcode
-                );
-
-                if (foundProduct == null)
+                // Поиск по EAN в БД (нормализуем как раньше)
+                var normalized = barcode.Replace(" ", "").Replace("-", "").Trim().ToUpperInvariant();
+                var found = _db.Products.FirstOrDefault(p => p.EAN == normalized);
+                if (found == null)
                     return Ok(new { Sap = string.Empty, RelatedProducts = new List<Product>() });
-
-                // Получаем SAP артикул
-                var sap = foundProduct.SapArticle;
-
-                // Находим все товары с этим SAP артикулом
-                var relatedProducts = products
-                    .Where(p => p.SapArticle == sap)
-                    .ToList();
-
-                return Ok(new { Sap = sap, RelatedProducts = relatedProducts });
+                var sap = found.SapArticle;
+                var related = _db.Products.Where(p => p.SapArticle == sap).ToList();
+                return Ok(new { Sap = sap, RelatedProducts = related });
             }
             catch (Exception ex)
             {
@@ -224,12 +225,7 @@ namespace BarcodeGenerator.Controllers
                     return Ok(new { RelatedProducts = new List<Product>() });
 
                 var filePath = excelFiles[0];
-                var products = _excelService.ReadProductsFromExcel(filePath);
-
-                var relatedProducts = products
-                    .Where(p => p.SapArticle == sap)
-                    .ToList();
-
+                var relatedProducts = _db.Products.Where(p => p.SapArticle == sap).ToList();
                 return Ok(new { RelatedProducts = relatedProducts });
             }
             catch (Exception ex)
