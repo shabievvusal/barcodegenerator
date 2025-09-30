@@ -83,48 +83,4 @@ export const excelAPI = {
     }
   },
 
-  getFileStatus: async () => {
-    try {
-      const { data } = await axios.get('/api/excel/status');
-      return data;
-    } catch (error) {
-      if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-        throw new Error('Сервер недоступен. Проверьте подключение к интернету.');
-      }
-      throw new Error(`Ошибка сервера: ${error.response?.status || 'Неизвестная ошибка'} - ${error.response?.data?.message || error.message}`);
-    }
-  },
-  getProducts: async () => {
-    try {
-      const { data } = await axios.get('/api/excel/products');
-      return data;
-    } catch (error) {
-      if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-        throw new Error('Сервер недоступен. Проверьте подключение к интернету.');
-      }
-      throw new Error(`Ошибка сервера: ${error.response?.status || 'Неизвестная ошибка'} - ${error.response?.data?.message || error.message}`);
-    }
-  },
-  searchProduct: async (barcode) => {
-    try {
-      const { data } = await axios.get(`/api/excel/search?barcode=${encodeURIComponent(barcode)}`);
-      return data;
-    } catch (error) {
-      if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-        throw new Error('Сервер недоступен. Проверьте подключение к интернету.');
-      }
-      throw new Error(`Ошибка сервера: ${error.response?.status || 'Неизвестная ошибка'} - ${error.response?.data?.message || error.message}`);
-    }
-  },
-  searchBySap: async (sapArticle) => {
-    try {
-      const { data } = await axios.get(`/api/excel/search-sap?sap=${encodeURIComponent(sapArticle)}`);
-      return data;
-    } catch (error) {
-      if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-        throw new Error('Сервер недоступен. Проверьте подключение к интернету.');
-      }
-      throw new Error(`Ошибка сервера: ${error.response?.status || 'Неизвестная ошибка'} - ${error.response?.data?.message || error.message}`);
-    }
-  },
 };
