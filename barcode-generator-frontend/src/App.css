@@ -886,6 +886,51 @@ body {
   gap: 12px;
 }
 
+/* Size settings styles */
+.size-settings {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.size-input-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.size-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.size-label span {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.size-input {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text-primary);
+  font-size: 14px;
+  min-width: 100px;
+  transition: border-color 0.2s ease;
+}
+
+.size-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(195, 7, 63, 0.2);
+}
+
 .print-type-option {
   flex: 1;
   cursor: pointer;

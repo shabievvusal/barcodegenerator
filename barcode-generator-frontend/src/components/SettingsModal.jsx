@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { excelAPI } from '../services/api';
 
-const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, defaultPrintType, onPrintTypeChange }) => {
+const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, defaultPrintType, onPrintTypeChange, qrSize, onQrSizeChange, code128Size, onCode128SizeChange }) => {
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -166,6 +166,56 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
                   <span className="option-text">Code-128</span>
                 </span>
               </label>
+            </div>
+            
+            {/* Настройки размера QR-кода */}
+            <div className="size-settings">
+              <h4 style={{color: '#000000', fontWeight: '600', marginBottom: '12px'}}>Размер QR-кода</h4>
+              <div className="size-input-group">
+                <label className="size-label">
+                  <span>Размер (px):</span>
+                  <input
+                    type="number"
+                    min="100"
+                    max="1000"
+                    step="50"
+                    value={qrSize}
+                    onChange={(e) => onQrSizeChange(parseInt(e.target.value))}
+                    className="size-input"
+                  />
+                </label>
+              </div>
+            </div>
+            
+            {/* Настройки размера Code-128 */}
+            <div className="size-settings">
+              <h4 style={{color: '#000000', fontWeight: '600', marginBottom: '12px'}}>Размер Code-128</h4>
+              <div className="size-input-group">
+                <label className="size-label">
+                  <span>Ширина (px):</span>
+                  <input
+                    type="number"
+                    min="200"
+                    max="800"
+                    step="50"
+                    value={code128Size.width}
+                    onChange={(e) => onCode128SizeChange({...code128Size, width: parseInt(e.target.value)})}
+                    className="size-input"
+                  />
+                </label>
+                <label className="size-label">
+                  <span>Высота (px):</span>
+                  <input
+                    type="number"
+                    min="50"
+                    max="300"
+                    step="10"
+                    value={code128Size.height}
+                    onChange={(e) => onCode128SizeChange({...code128Size, height: parseInt(e.target.value)})}
+                    className="size-input"
+                  />
+                </label>
+              </div>
             </div>
           </div>
 
