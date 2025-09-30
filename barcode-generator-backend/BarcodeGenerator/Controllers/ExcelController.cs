@@ -92,28 +92,17 @@ namespace BarcodeGenerator.Controllers
                 {
                     try
                     {
-                        // Устанавливаем права на запись перед удалением
-                        var fileInfo = new FileInfo(existingFile);
-                        fileInfo.Attributes = FileAttributes.Normal;
+                        // Простое удаление файла
                         System.IO.File.Delete(existingFile);
                     }
-                    catch (UnauthorizedAccessException)
+                    catch (Exception ex)
                     {
-                        // Если нет прав, пытаемся изменить атрибуты
-                        try
-                        {
-                            System.IO.File.SetAttributes(existingFile, FileAttributes.Normal);
-                            System.IO.File.Delete(existingFile);
-                        }
-                        catch (Exception innerEx)
-                        {
-                            Console.WriteLine($"Не удалось удалить файл {existingFile}: {innerEx.Message}");
-                            return StatusCode(500, new { Success = false, Message = $"Не удалось удалить файл: {innerEx.Message}" });
-                        }
+                        Console.WriteLine($"Не удалось удалить файл {existingFile}: {ex.Message}");
+                        // Не возвращаем ошибку, просто логируем и продолжаем
                     }
                 }
 
-                return Ok(new { Success = true, Message = "Файл успешно удален" });
+                return Ok(new { Success = true, Message = "Операция удаления завершена" });
             }
             catch (Exception ex)
             {

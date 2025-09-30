@@ -36,7 +36,7 @@ RUN addgroup -g 1001 -S appgroup && \
 # Создаем директорию для загрузок и устанавливаем права
 RUN mkdir -p /app/wwwroot/uploads && \
     chown -R appuser:appgroup /app && \
-    chmod -R 755 /app/wwwroot/uploads
+    chmod -R 777 /app/wwwroot/uploads
 USER appuser
 
 ENTRYPOINT ["dotnet", "BarcodeGenerator.dll"]
