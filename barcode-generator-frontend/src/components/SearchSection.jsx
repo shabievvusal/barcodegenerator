@@ -26,11 +26,6 @@ const SearchSection = ({ onSearch, isSearching }) => {
   const detectSearchType = (value) => {
     const trimmedValue = value.trim();
     
-    // Если содержит буквы или специальные символы - скорее всего SAP
-    if (/[a-zA-Z]/.test(trimmedValue) || /[^a-zA-Z0-9]/.test(trimmedValue)) {
-      return 'sap';
-    }
-    
     // Если содержит только цифры и длина больше 12 - скорее всего штрихкод
     if (/^\d+$/.test(trimmedValue) && trimmedValue.length >= 12) {
       return 'barcode';
@@ -39,6 +34,11 @@ const SearchSection = ({ onSearch, isSearching }) => {
     // Короткие числовые значения (до 12 символов) считаем SAP артикулами
     if (/^\d+$/.test(trimmedValue) && trimmedValue.length < 12) {
       return 'sap';
+    }
+    
+    // Если содержит буквы или специальные символы - скорее всего EAN (штрихкод)
+    if (/[a-zA-Z]/.test(trimmedValue) || /[^a-zA-Z0-9]/.test(trimmedValue)) {
+      return 'barcode';
     }
     
     // По умолчанию считаем штрихкодом
