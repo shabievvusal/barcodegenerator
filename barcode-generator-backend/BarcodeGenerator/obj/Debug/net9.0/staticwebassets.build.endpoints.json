@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "ManifestType": "Build",
+  "Endpoints": [
+    {
+      "Route": "uploads/products.ihhtplpep9.xlsx",
+      "AssetFile": "uploads/products.xlsx",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "172614"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 29 Sep 2025 23:42:12 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "ihhtplpep9"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8="
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/products.xlsx"
+        }
+      ]
+    },
+    {
+      "Route": "uploads/products.xlsx",
+      "AssetFile": "uploads/products.xlsx",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "172614"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 29 Sep 2025 23:42:12 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8="
+        }
+      ]
+    }
+  ]
+}

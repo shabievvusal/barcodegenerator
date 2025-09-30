@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\shabi\\RiderProjects\\BarcodeGenerator\\BarcodeGenerator\\wwwroot\\uploads\\products.xlsx",
+      "PackagePath": "staticwebassets\\uploads\\products.xlsx"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.BarcodeGenerator.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.BarcodeGenerator.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.BarcodeGenerator.props",
+      "PackagePath": "build\\BarcodeGenerator.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.BarcodeGenerator.props",
+      "PackagePath": "buildMultiTargeting\\BarcodeGenerator.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.BarcodeGenerator.props",
+      "PackagePath": "buildTransitive\\BarcodeGenerator.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

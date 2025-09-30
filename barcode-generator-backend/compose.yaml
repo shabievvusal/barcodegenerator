@@ -1,0 +1,26 @@
+﻿version: '3.8'
+
+services:
+  # ASP.NET Core API Backend
+  barcode-api:
+    build:
+      context: .
+      dockerfile: BarcodeGenerator/Dockerfile
+    ports:
+      - "8080:80"  # Внешний порт 8080, внутренний порт 80
+    volumes:
+      - ./BarcodeGenerator/wwwroot/uploads:/app/wwwroot/uploads
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  uploads:
+    driver: local

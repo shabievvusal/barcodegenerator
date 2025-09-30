@@ -1,0 +1,68 @@
+﻿# .NET
+**/bin/
+**/obj/
+**/out/
+*.user
+*.suo
+*.cache
+*.dll
+*.pdb
+*.exe
+*.log
+
+# Visual Studio
+.vs/
+.vscode/
+*.sln.docstates
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Git
+.git/
+.gitignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Runtime
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+
+# Build outputs
+dist/
+build/

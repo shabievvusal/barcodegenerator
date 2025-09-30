@@ -1,0 +1,221 @@
+﻿using BarcodeGenerator.Models;
+using BarcodeGenerator.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BarcodeGenerator.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ExcelController : ControllerBase
+    {
+        private readonly ExcelService _excelService;
+        private readonly IWebHostEnvironment _environment;
+        private const string UploadsFolder = "uploads";
+
+        public ExcelController(ExcelService excelService, IWebHostEnvironment environment)
+        {
+            _excelService = excelService;
+            _environment = environment;
+        }
+
+        private string GetUploadsPath()
+        {
+            // Безопасно получаем путь к wwwroot/uploads
+            var webRoot = _environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var uploadsPath = Path.Combine(webRoot, UploadsFolder);
+            if (!Directory.Exists(uploadsPath))
+                Directory.CreateDirectory(uploadsPath);
+            return uploadsPath;
+        }
+
+        [HttpPost("upload")]
+        public async Task<ActionResult<FileUploadResponse>> UploadExcel(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest(new FileUploadResponse { Success = false, Message = "Файл не выбран" });
+
+            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+            if (fileExtension != ".xlsx" && fileExtension != ".xls")
+                return BadRequest(new FileUploadResponse { Success = false, Message = "Только файлы Excel (.xlsx, .xls)" });
+
+            if (file.Length > 50 * 1024 * 1024)
+                return BadRequest(new FileUploadResponse { Success = false, Message = "Файл слишком большой (макс. 50MB)" });
+
+            try
+            {
+                var uploadsPath = GetUploadsPath();
+
+                // Удаляем старые файлы
+                foreach (var existingFile in Directory.GetFiles(uploadsPath, "products.*"))
+                    System.IO.File.Delete(existingFile);
+
+                var fileName = $"products{fileExtension}";
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                await using (var stream = new FileStream(filePath, FileMode.Create))
+                    await file.CopyToAsync(stream);
+
+                var products = _excelService.ReadProductsFromExcel(filePath);
+
+                return Ok(new FileUploadResponse
+                {
+                    Success = true,
+                    Message = $"Успешно загружено {products.Count} товаров",
+                    Products = products
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex); // логируем для отладки
+                return StatusCode(500, new FileUploadResponse
+                {
+                    Success = false,
+                    Message = $"Ошибка при обработке файла: {ex.Message}"
+                });
+            }
+        }
+
+        [HttpDelete("delete")]
+        public IActionResult DeleteExcel()
+        {
+            try
+            {
+                var uploadsPath = GetUploadsPath();
+
+                foreach (var existingFile in Directory.GetFiles(uploadsPath, "products.*"))
+                    System.IO.File.Delete(existingFile);
+
+                return Ok(new { Success = true, Message = "Файл успешно удален" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, new { Success = false, Message = ex.Message });
+            }
+        }
+
+        [HttpGet("products")]
+        public ActionResult<List<Product>> GetProducts()
+        {
+            try
+            {
+                var uploadsPath = GetUploadsPath();
+                var excelFiles = Directory.GetFiles(uploadsPath, "products.*");
+                if (excelFiles.Length == 0)
+                    return Ok(new List<Product>()); // вместо 500 — пустой список
+
+                var filePath = excelFiles[0];
+                var products = _excelService.ReadProductsFromExcel(filePath);
+
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, new { Message = ex.Message });
+            }
+        }
+        
+        [HttpGet("search")]
+        public ActionResult SearchProduct([FromQuery] string barcode)
+        {
+            if (string.IsNullOrWhiteSpace(barcode))
+                return BadRequest(new { Message = "Штрихкод не указан" });
+
+            try
+            {
+                var uploadsPath = GetUploadsPath();
+                var excelFiles = Directory.GetFiles(uploadsPath, "products.*");
+
+                if (excelFiles.Length == 0)
+                    return Ok(new { Sap = string.Empty, RelatedProducts = new List<Product>() });
+
+                var filePath = excelFiles[0];
+                var products = _excelService.ReadProductsFromExcel(filePath);
+
+                // Нормализуем штрихкод для поиска (убираем пробелы и дефисы)
+                var normalizedBarcode = barcode.Replace(" ", "").Replace("-", "");
+
+                // Находим товар по EAN
+                var foundProduct = products.FirstOrDefault(p =>
+                    !string.IsNullOrEmpty(p.EAN) &&
+                    p.EAN.Replace(" ", "").Replace("-", "") == normalizedBarcode
+                );
+
+                if (foundProduct == null)
+                    return Ok(new { Sap = string.Empty, RelatedProducts = new List<Product>() });
+
+                // Получаем SAP артикул
+                var sap = foundProduct.SapArticle;
+
+                // Находим все товары с этим SAP артикулом
+                var relatedProducts = products
+                    .Where(p => p.SapArticle == sap)
+                    .ToList();
+
+                return Ok(new { Sap = sap, RelatedProducts = relatedProducts });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, new { Message = ex.Message });
+            }
+        }
+        
+        
+        [HttpGet("search-sap")]
+        public ActionResult SearchBySap([FromQuery] string sap)
+        {
+            if (string.IsNullOrWhiteSpace(sap))
+                return BadRequest(new { Message = "SAP артикул не указан" });
+
+            try
+            {
+                var uploadsPath = GetUploadsPath();
+                var excelFiles = Directory.GetFiles(uploadsPath, "products.*");
+
+                if (excelFiles.Length == 0)
+                    return Ok(new { RelatedProducts = new List<Product>() });
+
+                var filePath = excelFiles[0];
+                var products = _excelService.ReadProductsFromExcel(filePath);
+
+                var relatedProducts = products
+                    .Where(p => p.SapArticle == sap)
+                    .ToList();
+
+                return Ok(new { RelatedProducts = relatedProducts });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, new { Message = ex.Message });
+            }
+        }
+
+
+
+
+        [HttpGet("status")]
+        public IActionResult GetFileStatus()
+        {
+            try
+            {
+                var uploadsPath = GetUploadsPath();
+                var hasFile = Directory.GetFiles(uploadsPath, "products.*").Length > 0;
+                return Ok(new { HasFile = hasFile });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, new { Message = ex.Message });
+            }
+        }
+
+        [HttpGet("health")]
+        public IActionResult Health()
+        {
+            return Ok(new { Status = "Healthy", Timestamp = DateTime.UtcNow });
+        }
+    }
+}

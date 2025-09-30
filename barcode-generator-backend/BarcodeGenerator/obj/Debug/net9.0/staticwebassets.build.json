@@ -1,0 +1,125 @@
+{
+  "Version": 1,
+  "Hash": "IYgOOZRdBT2pfhiQIy01awr/BdJpr5hemqe1AxzsuRk=",
+  "Source": "BarcodeGenerator",
+  "BasePath": "_content/BarcodeGenerator",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "BarcodeGenerator\\wwwroot",
+      "Source": "BarcodeGenerator",
+      "ContentRoot": "C:\\Users\\shabi\\RiderProjects\\BarcodeGenerator\\BarcodeGenerator\\wwwroot\\",
+      "BasePath": "_content/BarcodeGenerator",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\shabi\\RiderProjects\\BarcodeGenerator\\BarcodeGenerator\\wwwroot\\uploads\\products.xlsx",
+      "SourceId": "BarcodeGenerator",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\shabi\\RiderProjects\\BarcodeGenerator\\BarcodeGenerator\\wwwroot\\",
+      "BasePath": "_content/BarcodeGenerator",
+      "RelativePath": "uploads/products#[.{fingerprint}]?.xlsx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "ihhtplpep9",
+      "Integrity": "xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\products.xlsx"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "uploads/products.ihhtplpep9.xlsx",
+      "AssetFile": "C:\\Users\\shabi\\RiderProjects\\BarcodeGenerator\\BarcodeGenerator\\wwwroot\\uploads\\products.xlsx",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "172614"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 29 Sep 2025 23:42:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "ihhtplpep9"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/products.xlsx"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/products.xlsx",
+      "AssetFile": "C:\\Users\\shabi\\RiderProjects\\BarcodeGenerator\\BarcodeGenerator\\wwwroot\\uploads\\products.xlsx",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "172614"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 29 Sep 2025 23:42:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8="
+        }
+      ]
+    }
+  ]
+}

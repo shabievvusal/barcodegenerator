@@ -1,0 +1,16 @@
+﻿<Project>
+  <ItemGroup>
+    <StaticWebAssetEndpoint Include="_content/BarcodeGenerator/uploads/products.ihhtplpep9.xlsx">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\products.xlsx'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"ihhtplpep9"},{"Name":"integrity","Value":"sha256-xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8="},{"Name":"label","Value":"_content/BarcodeGenerator/uploads/products.xlsx"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"172614"},{"Name":"Content-Type","Value":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},{"Name":"ETag","Value":"\u0022xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8=\u0022"},{"Name":"Last-Modified","Value":"Mon, 29 Sep 2025 23:42:12 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/BarcodeGenerator/uploads/products.xlsx">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\products.xlsx'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"172614"},{"Name":"Content-Type","Value":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},{"Name":"ETag","Value":"\u0022xjqSCfoJpXMf/lfRSgvb0J4DmlPQxkrUcazfB/bsXW8=\u0022"},{"Name":"Last-Modified","Value":"Mon, 29 Sep 2025 23:42:12 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+  </ItemGroup>
+</Project>

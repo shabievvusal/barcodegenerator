@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # ASP.NET Core API Backend
+  backend:
+    build:
+      context: ./barcode-generator-backend
+      dockerfile: BarcodeGenerator/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./barcode-generator-backend/BarcodeGenerator/wwwroot/uploads:/app/wwwroot/uploads
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/api/excel/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # React Frontend with Nginx
+  frontend:
+    build:
+      context: ./barcode-generator-frontend
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  uploads:
+    driver: local

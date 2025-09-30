@@ -1,0 +1,41 @@
+﻿# Используем более легкий базовый образ
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS base
+WORKDIR /app
+EXPOSE 80
+
+# Оптимизированная сборка
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+WORKDIR /src
+
+# Копируем только файл проекта для кэширования слоев
+COPY ["BarcodeGenerator.csproj", "BarcodeGenerator/"]
+
+# Восстанавливаем зависимости (кэшируется если .csproj не изменился)
+RUN dotnet restore "BarcodeGenerator/BarcodeGenerator.csproj" --runtime alpine-x64 --self-contained false
+
+# Копируем остальные файлы
+COPY . .
+
+# Собираем проект
+WORKDIR "/src/BarcodeGenerator"
+RUN dotnet build "BarcodeGenerator.csproj" -c Release -o /app/build --no-restore
+
+# Публикуем приложение
+FROM build AS publish
+RUN dotnet publish "BarcodeGenerator.csproj" -c Release -o /app/publish --no-build --no-restore
+
+# Финальный образ
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+# Создаем директорию для загрузок
+RUN mkdir -p /app/wwwroot/uploads
+
+# Устанавливаем права для Alpine
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -S appuser -u 1001 -G appgroup && \
+    chown -R appuser:appgroup /app
+USER appuser
+
+ENTRYPOINT ["dotnet", "BarcodeGenerator.dll"]
