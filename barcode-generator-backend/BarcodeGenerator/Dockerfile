@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 WORKDIR /src
 
 # Копируем только файл проекта для кэширования слоев
-COPY ["BarcodeGenerator.csproj", "BarcodeGenerator/"]
+COPY ["BarcodeGenerator/BarcodeGenerator.csproj", "BarcodeGenerator/"]
 
 # Восстанавливаем зависимости (кэшируется если .csproj не изменился)
 RUN dotnet restore "BarcodeGenerator/BarcodeGenerator.csproj" --runtime alpine-x64 --self-contained false
