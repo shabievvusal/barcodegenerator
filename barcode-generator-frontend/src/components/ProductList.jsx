@@ -1,7 +1,7 @@
 import React from 'react';
 import "../ProductList.css";
 
-const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, defaultPrintType = 'qr', qrSize = 500, code128Size = { width: 500, height: 200 } }) => {
+const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, defaultPrintType = 'qr', qrSize = 500, code128Size = { width: 500, height: 200 }, textSize = 10 }) => {
   const handleBarcodeClick = (product, barcodeType = 'qr') => {
     // Создаем скрытый iframe для печати
     const iframe = document.createElement('iframe');
@@ -45,19 +45,19 @@ const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, default
             }
             .product-info {
               margin: 2mm 0;
-              font-size: 10px;
+              font-size: ${textSize}px;
               color: #000;
               text-align: center;
             }
             .product-name {
-              font-size: 8px;
+              font-size: ${Math.max(6, textSize - 2)}px;
               font-weight: bold;
               margin: 1mm 0;
               color: #000;
             }
             .barcode {
               font-family: monospace;
-              font-size: 8px;
+              font-size: ${Math.max(6, textSize - 2)}px;
               font-weight: bold;
               margin: 1mm 0;
               word-break: break-all;

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { excelAPI } from '../services/api';
 
-const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, defaultPrintType, onPrintTypeChange, qrSize, onQrSizeChange, code128Size, onCode128SizeChange }) => {
+const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, defaultPrintType, onPrintTypeChange, qrSize, onQrSizeChange, code128Size, onCode128SizeChange, textSize, onTextSizeChange }) => {
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -176,9 +176,9 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
                   <span>Размер (px):</span>
                   <input
                     type="number"
-                    min="100"
+                    min="1"
                     max="1000"
-                    step="50"
+                    step="10"
                     value={qrSize}
                     onChange={(e) => onQrSizeChange(parseInt(e.target.value))}
                     className="size-input"
@@ -212,6 +212,25 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
                     step="10"
                     value={code128Size.height}
                     onChange={(e) => onCode128SizeChange({...code128Size, height: parseInt(e.target.value)})}
+                    className="size-input"
+                  />
+                </label>
+              </div>
+            </div>
+            
+            {/* Настройки размера текста */}
+            <div className="size-settings">
+              <h4 style={{color: '#000000', fontWeight: '600', marginBottom: '12px'}}>Размер текста</h4>
+              <div className="size-input-group">
+                <label className="size-label">
+                  <span>Размер шрифта (px):</span>
+                  <input
+                    type="number"
+                    min="6"
+                    max="24"
+                    step="1"
+                    value={textSize}
+                    onChange={(e) => onTextSizeChange(parseInt(e.target.value))}
                     className="size-input"
                   />
                 </label>

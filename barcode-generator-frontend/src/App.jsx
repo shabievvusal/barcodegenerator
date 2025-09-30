@@ -18,6 +18,7 @@ function App() {
   const [defaultPrintType, setDefaultPrintType] = useState('qr'); // 'qr' или 'code128'
   const [qrSize, setQrSize] = useState(500); // размер QR-кода
   const [code128Size, setCode128Size] = useState({ width: 500, height: 200 }); // размер Code-128
+  const [textSize, setTextSize] = useState(10); // размер текста
 
   useEffect(() => {
     checkFileStatus();
@@ -152,6 +153,12 @@ const handleSearch = async (searchValue, searchType = 'barcode') => {
     setTimeout(() => setMessage(''), 3000);
   };
 
+  const handleTextSizeChange = (newSize) => {
+    setTextSize(newSize);
+    setMessage(`Размер текста изменен на ${newSize}px`);
+    setTimeout(() => setMessage(''), 3000);
+  };
+
   return (
     <div className="app">
       <header className="app-header">
@@ -174,6 +181,7 @@ const handleSearch = async (searchValue, searchType = 'barcode') => {
           defaultPrintType={defaultPrintType}
           qrSize={qrSize}
           code128Size={code128Size}
+          textSize={textSize}
         />
 
         {message && (
@@ -205,6 +213,8 @@ const handleSearch = async (searchValue, searchType = 'barcode') => {
         onQrSizeChange={handleQrSizeChange}
         code128Size={code128Size}
         onCode128SizeChange={handleCode128SizeChange}
+        textSize={textSize}
+        onTextSizeChange={handleTextSizeChange}
       />
     </div>
   );
