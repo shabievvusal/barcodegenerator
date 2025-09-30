@@ -46,6 +46,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Ensure database is created (initial bootstrap). For production migrations, replace with Database.Migrate().
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+}
+
 app.UseCors("ReactApp");
 
 // Create uploads directory if it doesn't exist
