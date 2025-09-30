@@ -45,15 +45,44 @@ namespace BarcodeGenerator.Controllers
             {
                 var uploadsPath = GetUploadsPath();
 
-                // Удаляем старые файлы
-                foreach (var existingFile in Directory.GetFiles(uploadsPath, "products.*"))
-                    System.IO.File.Delete(existingFile);
+                // Удаляем старые файлы (игнорируем ошибки)
+                try
+                {
+                    foreach (var existingFile in Directory.GetFiles(uploadsPath, "products.*"))
+                    {
+                        try
+                        {
+                            System.IO.File.Delete(existingFile);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Не удалось удалить старый файл {existingFile}: {ex.Message}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка при удалении старых файлов: {ex.Message}");
+                }
 
                 var fileName = $"products{fileExtension}";
                 var filePath = Path.Combine(uploadsPath, fileName);
 
-                await using (var stream = new FileStream(filePath, FileMode.Create))
+                // Создаем файл с правильными правами
+                await using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
                     await file.CopyToAsync(stream);
+                }
+
+                // Устанавливаем права на файл после создания
+                try
+                {
+                    System.IO.File.SetAttributes(filePath, FileAttributes.Normal);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Не удалось установить атрибуты файла: {ex.Message}");
+                }
 
                 var products = _excelService.ReadProductsFromExcel(filePath);
 
