@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8080/api/excel';
+const API_BASE = '/api/excel';
 
 export const excelAPI = {
   async uploadFile(file) {
@@ -85,7 +85,7 @@ export const excelAPI = {
 
   getFileStatus: async () => {
     try {
-      const { data } = await axios.get('http://localhost:8080/api/excel/status');
+      const { data } = await axios.get('/api/excel/status');
       return data;
     } catch (error) {
       if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
@@ -96,7 +96,7 @@ export const excelAPI = {
   },
   getProducts: async () => {
     try {
-      const { data } = await axios.get('http://localhost:8080/api/excel/products');
+      const { data } = await axios.get('/api/excel/products');
       return data;
     } catch (error) {
       if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
@@ -107,7 +107,7 @@ export const excelAPI = {
   },
   searchProduct: async (barcode) => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/excel/search?barcode=${encodeURIComponent(barcode)}`);
+      const { data } = await axios.get(`/api/excel/search?barcode=${encodeURIComponent(barcode)}`);
       return data;
     } catch (error) {
       if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
@@ -118,7 +118,7 @@ export const excelAPI = {
   },
   searchBySap: async (sapArticle) => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/excel/search-sap?sap=${encodeURIComponent(sapArticle)}`);
+      const { data } = await axios.get(`/api/excel/search-sap?sap=${encodeURIComponent(sapArticle)}`);
       return data;
     } catch (error) {
       if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
