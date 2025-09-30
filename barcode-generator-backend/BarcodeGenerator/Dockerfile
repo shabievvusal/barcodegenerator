@@ -11,7 +11,7 @@ WORKDIR /src
 COPY ["BarcodeGenerator/BarcodeGenerator.csproj", "BarcodeGenerator/"]
 
 # Восстанавливаем зависимости (кэшируется если .csproj не изменился)
-RUN dotnet restore "BarcodeGenerator/BarcodeGenerator.csproj" --runtime alpine-x64 --self-contained false
+RUN dotnet restore "BarcodeGenerator/BarcodeGenerator.csproj"
 
 # Копируем остальные файлы
 COPY . .
@@ -22,7 +22,7 @@ RUN dotnet build "BarcodeGenerator.csproj" -c Release -o /app/build --no-restore
 
 # Публикуем приложение
 FROM build AS publish
-RUN dotnet publish "BarcodeGenerator.csproj" -c Release -o /app/publish --no-build --no-restore
+RUN dotnet publish "BarcodeGenerator.csproj" -c Release -o /app/publish --no-build
 
 # Финальный образ
 FROM base AS final
