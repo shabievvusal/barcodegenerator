@@ -102,7 +102,7 @@ namespace BarcodeGenerator.Controllers
                         // Если нет прав, пытаемся изменить атрибуты
                         try
                         {
-                            File.SetAttributes(existingFile, FileAttributes.Normal);
+                            System.IO.File.SetAttributes(existingFile, FileAttributes.Normal);
                             System.IO.File.Delete(existingFile);
                         }
                         catch (Exception innerEx)
