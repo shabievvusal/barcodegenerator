@@ -188,18 +188,8 @@ namespace BarcodeGenerator.Controllers
             {
                 // Поиск по EAN в БД (нормализуем как раньше)
                 var normalized = barcode.Replace(" ", "").Replace("-", "").Trim().ToUpperInvariant();
-                // Строгое совпадение по нормализованному EAN
+                // Строгое совпадение по нормализованному EAN (учитываем все символы)
                 var found = _db.Products.FirstOrDefault(p => p.EAN == normalized);
-                // Если код содержит буквенный префикс (например, SBL...) и точного совпадения нет,
-                // пробуем найти по числовой части кода (строгое равенство)
-                if (found == null && normalized.Any(ch => char.IsLetter(ch)))
-                {
-                    var digitsOnly = new string(normalized.Where(char.IsDigit).ToArray());
-                    if (!string.IsNullOrEmpty(digitsOnly))
-                    {
-                        found = _db.Products.FirstOrDefault(p => p.EAN == digitsOnly);
-                    }
-                }
                 if (found == null)
                     return Ok(new { Sap = string.Empty, RelatedProducts = new List<Product>() });
                 var sap = found.SapArticle;
