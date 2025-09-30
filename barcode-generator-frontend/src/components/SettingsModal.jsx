@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { excelAPI } from '../services/api';
 
 const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, defaultPrintType, onPrintTypeChange, qrSize, onQrSizeChange, code128Size, onCode128SizeChange, textSize, onTextSizeChange }) => {
@@ -7,6 +7,54 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [fileInfo, setFileInfo] = useState(null);
+
+  // Функции для работы с настройками
+  const saveSettings = useCallback(() => {
+    const settings = {
+      defaultPrintType,
+      qrSize,
+      code128Size,
+      textSize
+    };
+    localStorage.setItem('barcodeGeneratorSettings', JSON.stringify(settings));
+    console.log('✅ Настройки сохранены');
+  }, [defaultPrintType, qrSize, code128Size, textSize]);
+
+  const loadSettings = useCallback(() => {
+    try {
+      const savedSettings = localStorage.getItem('barcodeGeneratorSettings');
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        console.log('✅ Настройки загружены из localStorage');
+        return settings;
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки настроек:', error);
+    }
+    return null;
+  }, []);
+
+  // Загружаем настройки при открытии модального окна
+  useEffect(() => {
+    if (isOpen) {
+      const savedSettings = loadSettings();
+      if (savedSettings) {
+        // Применяем сохраненные настройки
+        if (savedSettings.defaultPrintType && savedSettings.defaultPrintType !== defaultPrintType) {
+          onPrintTypeChange(savedSettings.defaultPrintType);
+        }
+        if (savedSettings.qrSize && savedSettings.qrSize !== qrSize) {
+          onQrSizeChange(savedSettings.qrSize);
+        }
+        if (savedSettings.code128Size && JSON.stringify(savedSettings.code128Size) !== JSON.stringify(code128Size)) {
+          onCode128SizeChange(savedSettings.code128Size);
+        }
+        if (savedSettings.textSize && savedSettings.textSize !== textSize) {
+          onTextSizeChange(savedSettings.textSize);
+        }
+      }
+    }
+  }, [isOpen, loadSettings, defaultPrintType, qrSize, code128Size, textSize, onPrintTypeChange, onQrSizeChange, onCode128SizeChange, onTextSizeChange]);
 
   const handleFileSelect = async (file) => {
     if (!file) return;
@@ -317,6 +365,40 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
               </div>
             </div>
           )}
+
+          {/* Кнопка сохранения настроек */}
+          <div className="settings-actions" style={{marginTop: '20px', padding: '15px', borderTop: '1px solid #e2e8f0'}}>
+            <button 
+              className="save-settings-btn"
+              onClick={saveSettings}
+              style={{
+                background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '12px 24px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.transform = 'translateY(-1px)';
+                e.target.style.boxShadow = '0 6px 16px rgba(5, 150, 105, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 12px rgba(5, 150, 105, 0.3)';
+              }}
+            >
+              <span>💾</span>
+              Сохранить настройки
+            </button>
+          </div>
         </div>
       </div>
     </div>

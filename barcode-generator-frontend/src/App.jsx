@@ -23,6 +23,21 @@ function App() {
   useEffect(() => {
     checkFileStatus();
     loadProducts();
+    
+    // Загружаем сохраненные настройки при запуске
+    try {
+      const savedSettings = localStorage.getItem('barcodeGeneratorSettings');
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        if (settings.defaultPrintType) setDefaultPrintType(settings.defaultPrintType);
+        if (settings.qrSize) setQrSize(settings.qrSize);
+        if (settings.code128Size) setCode128Size(settings.code128Size);
+        if (settings.textSize) setTextSize(settings.textSize);
+        console.log('✅ Настройки загружены при запуске');
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки настроек:', error);
+    }
   }, []);
 
   const checkFileStatus = async () => {
