@@ -22,7 +22,7 @@ RUN dotnet build "BarcodeGenerator.csproj" -c Release -o /app/build --no-restore
 
 # Публикуем приложение
 FROM build AS publish
-RUN dotnet publish "BarcodeGenerator.csproj" -c Release -o /app/publish --no-build
+RUN dotnet publish "BarcodeGenerator.csproj" -c Release -o /app/publish
 
 # Финальный образ
 FROM base AS final
