@@ -83,4 +83,36 @@ export const excelAPI = {
     }
   },
 
+  // Добавлены отсутствующие методы поиска
+  async searchProduct(barcode) {
+    try {
+      const response = await fetch(`${API_BASE}/search?barcode=${encodeURIComponent(barcode)}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Ошибка сервера: ${response.status} - ${errorText}`);
+      }
+      return response.json();
+    } catch (error) {
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Сервер недоступен. Проверьте подключение к интернету.');
+      }
+      throw error;
+    }
+  },
+
+  async searchBySap(sap) {
+    try {
+      const response = await fetch(`${API_BASE}/search-sap?sap=${encodeURIComponent(sap)}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Ошибка сервера: ${response.status} - ${errorText}`);
+      }
+      return response.json();
+    } catch (error) {
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Сервер недоступен. Проверьте подключение к интернету.');
+      }
+      throw error;
+    }
+  },
 };
