@@ -1,0 +1,1377 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Dark theme palette */
+  --bg: #1A1A1D;
+  --bg-soft: #202024;
+  --panel: #2A2A2E;
+  --text-primary: #F5F5F6;
+  --text-secondary: #B5B5B9;
+  --border: #3A3A3F;
+  --accent: #C3073F;
+  --accent-strong: #950740;
+  --accent-muted: #6F2232;
+  --accent-soft: #4E4E50;
+}
+
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(195,7,63,0.15), transparent 50%),
+    radial-gradient(ellipse 60% 80% at -20% 50%, rgba(149,7,64,0.10), transparent 50%),
+    radial-gradient(ellipse 40% 60% at 120% 80%, rgba(111,34,50,0.08), transparent 50%),
+    var(--bg);
+  min-height: 100vh;
+  color: var(--text-primary);
+  animation: backgroundShift 30s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+  0%, 100% { 
+    background: 
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(195,7,63,0.15), transparent 50%),
+      radial-gradient(ellipse 60% 80% at -20% 50%, rgba(149,7,64,0.10), transparent 50%),
+      radial-gradient(ellipse 40% 60% at 120% 80%, rgba(111,34,50,0.08), transparent 50%),
+      var(--bg);
+  }
+  50% { 
+    background: 
+      radial-gradient(ellipse 70% 60% at 30% 10%, rgba(195,7,63,0.12), transparent 50%),
+      radial-gradient(ellipse 80% 40% at 80% 70%, rgba(149,7,64,0.08), transparent 50%),
+      radial-gradient(ellipse 50% 70% at 20% 90%, rgba(111,34,50,0.10), transparent 50%),
+      var(--bg);
+  }
+}
+
+.app {
+  min-height: 100vh;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* Animated gradient background */
+.app::before,
+.app::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Layer 1: large morphing blob */
+.app::before {
+  width: 120vmax;
+  height: 120vmax;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(40% 50% at 20% 20%, rgba(195,7,63,0.35) 0%, rgba(195,7,63,0.00) 60%),
+    radial-gradient(35% 45% at 80% 30%, rgba(149,7,64,0.25) 0%, rgba(149,7,64,0.00) 65%),
+    radial-gradient(30% 40% at 50% 80%, rgba(111,34,50,0.20) 0%, rgba(111,34,50,0.00) 70%),
+    radial-gradient(25% 35% at 10% 70%, rgba(78,78,80,0.15) 0%, rgba(78,78,80,0.00) 60%);
+  filter: blur(80px) saturate(120%) brightness(1.1);
+  animation: morphA 20s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Layer 2: secondary morphing blob */
+.app::after {
+  width: 60vmax;
+  height: 60vmax;
+  left: 70%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(30% 35% at 50% 50%, rgba(195,7,63,0.20) 0%, rgba(195,7,63,0.00) 70%),
+    radial-gradient(25% 30% at 60% 40%, rgba(149,7,64,0.15) 0%, rgba(149,7,64,0.00) 60%),
+    radial-gradient(20% 25% at 40% 60%, rgba(111,34,50,0.12) 0%, rgba(111,34,50,0.00) 65%);
+  filter: blur(50px) saturate(115%);
+  opacity: .7;
+  mix-blend-mode: screen;
+  animation: morphB 25s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes morphA {
+  0%   { 
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    filter: blur(80px) saturate(120%) brightness(1.1);
+  }
+  25%  { 
+    transform: translate(-45%, -55%) rotate(90deg) scale(1.1);
+    filter: blur(90px) saturate(130%) brightness(1.2);
+  }
+  50%  { 
+    transform: translate(-55%, -45%) rotate(180deg) scale(0.9);
+    filter: blur(70px) saturate(110%) brightness(1.0);
+  }
+  75%  { 
+    transform: translate(-48%, -52%) rotate(270deg) scale(1.05);
+    filter: blur(85px) saturate(125%) brightness(1.15);
+  }
+  100% { 
+    transform: translate(-50%, -50%) rotate(360deg) scale(1);
+    filter: blur(80px) saturate(120%) brightness(1.1);
+  }
+}
+
+@keyframes morphB {
+  0%   { 
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    filter: blur(50px) saturate(115%);
+  }
+  33%  { 
+    transform: translate(-45%, -55%) rotate(120deg) scale(1.1);
+    filter: blur(60px) saturate(125%);
+  }
+  66%  { 
+    transform: translate(-55%, -45%) rotate(240deg) scale(0.9);
+    filter: blur(40px) saturate(105%);
+  }
+  100% { 
+    transform: translate(-50%, -50%) rotate(360deg) scale(1);
+    filter: blur(50px) saturate(115%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app::before,
+  .app::after { animation: none; filter: blur(30px); }
+}
+
+.app-header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  animation: fadeInUp .6s ease both;
+}
+
+.app-header h1 {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: .2px;
+}
+
+/* Prevent caret/cursor flicker on header */
+.app-header,
+.app-header * {
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+.app-header .logo-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: conic-gradient(from 210deg, var(--accent), var(--accent-strong));
+  -webkit-mask: radial-gradient(circle at 40% 60%, #0000 10px, #000 11px);
+  mask: radial-gradient(circle at 40% 60%, #0000 10px, #000 11px);
+  position: relative;
+  box-shadow: 0 2px 8px rgba(195,7,63,0.35);
+  animation: popIn .6s ease .1s both;
+}
+
+@keyframes popIn { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.app-header p { display: none; }
+
+/* Кнопка настроек */
+.settings-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: none;
+  z-index: 1000;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.settings-button:hover {
+  transform: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.file-indicator {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 12px;
+  height: 12px;
+  background: #10b981;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+/* Модальное окно */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 20px;
+  padding: 0;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  animation: none;
+}
+
+.settings-modal {
+  max-width: 600px;
+}
+
+.print-modal {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  max-width: 400px;
+}
+
+.print-modal .modal-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.print-modal .modal-header h2 {
+  color: var(--text-primary);
+}
+
+.print-modal .close-button {
+  color: var(--text-secondary);
+}
+
+.print-modal .close-button:hover {
+  background: var(--border);
+}
+
+.print-preview {
+  text-align: center;
+  padding: 20px;
+}
+
+.product-info {
+  margin-bottom: 20px;
+}
+
+.product-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.barcode-display {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.quantity-display {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.print-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.header-icon {
+  font-size: 1.5rem;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 1.3rem;
+  font-weight: 600;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #64748b;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover {
+  background: #f1f5f9;
+}
+
+.modal-body {
+  padding: 25px;
+  position: relative;
+}
+
+.file-status {
+  text-align: center;
+}
+
+.status-success {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #10b981;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.status-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.status-content h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.status-content p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.delete-file-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: #ef4444;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: none;
+}
+
+.delete-file-btn:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.upload-area {
+  border: 3px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: none;
+}
+
+.upload-area:hover, .upload-area.dragging {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.upload-area h3 {
+  color: #1e293b;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  cursor: pointer;
+}
+
+.upload-area p {
+  color: #475569;
+  margin: 0 0 15px 0;
+  cursor: pointer;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.file-info {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 10px;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+}
+
+/* Поисковая секция */
+.search-section { max-width: 720px; margin: 0 auto 16px; }
+.search-section.minimal { max-width: 640px; margin: 0 auto 12px; }
+
+/* Main container alignment similar to reference site */
+.container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+.search-container { display: none; }
+
+.search-icon {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.search-form { display: flex; gap: 8px; align-items: center; background: var(--panel); border: 1px solid var(--border); padding: 8px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); position: relative; z-index: 1; animation: fadeInUp .5s ease .05s both; }
+.search-form.minimal { gap: 6px; }
+
+/* Cursor behavior: I‑beam только внутри инпута */
+.search-form { cursor: default; }
+.search-form .search-input { cursor: text; caret-color: var(--accent); }
+.search-form .search-input:not(:focus) { caret-color: transparent; }
+.search-form button, .search-form .clear-search, .search-form .btn { cursor: pointer; }
+.search-form .clear-search { user-select: none; }
+
+.search-input { flex: 1; padding: 12px 14px; border: 1px solid var(--border); background: #1F1F22; color: var(--text-primary); border-radius: 10px; font-size: 1rem; transition: box-shadow .2s ease, border-color .2s ease, background-color .2s ease; }
+.search-input.minimal { padding: 10px 12px; }
+
+.search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(195,7,63,0.35), 0 6px 18px rgba(195,7,63,0.18); background: #222226; }
+
+.search-input::placeholder {
+  color: #9ca3af;
+}
+
+.clear-search { background: #2B2B2F; border: 1px solid var(--border); font-size: 1rem; color: var(--text-secondary); cursor: pointer; padding: 8px 10px; border-radius: 6px; }
+.clear-search.minimal { padding: 8px 10px; }
+
+.clear-search:hover { background: #333338; border-color: var(--accent); color: var(--text-primary); }
+
+.search-button { display: none; }
+
+/* Buttons */
+.btn { appearance: none; border: 1px solid var(--border); background: var(--panel); color: var(--text-primary); padding: 10px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .05s ease; }
+.btn:hover { background: #f9fafb; }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+.btn-primary:disabled { background: #6f4452; border-color: #6f4452; color: #ddd; }
+
+.search-button:hover:not(:disabled) {
+  background: #5a6fd8;
+}
+
+.search-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.search-hint { display: none; }
+
+/* Список товаров */
+.products-loading, .products-empty, .products-not-found {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.results-header {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.sap-info {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #667eea;
+}
+
+.barcode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.barcode-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.barcode-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.barcode-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 10px;
+}
+
+.product-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  flex: 1;
+}
+
+.quantity-badge {
+  background: #10b981;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.barcode-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.barcode-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.barcode-row .label {
+  font-weight: 600;
+  color: #475569;
+  min-width: 100px;
+}
+
+.barcode-row .value {
+  color: #1e293b;
+  text-align: right;
+  flex: 1;
+}
+
+.barcode-value {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.sap-article {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-left: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes slideInLeft {
+  0% { 
+    transform: translateX(-120%) scale(0.9); 
+    opacity: 0; 
+  }
+  50% {
+    transform: translateX(-10%) scale(1.02);
+    opacity: 0.8;
+  }
+  100% { 
+    transform: translateX(0) scale(1); 
+    opacity: 1; 
+  }
+}
+
+@keyframes slideOutLeft {
+  0% { 
+    transform: translateX(0); 
+    opacity: 1; 
+  }
+  100% { 
+    transform: translateX(-100%); 
+    opacity: 0; 
+  }
+}
+
+.message {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 18px 24px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  z-index: 3000;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+  animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  max-width: 350px;
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.message.success {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  border-left: 4px solid #10b981;
+  box-shadow: 0 8px 32px rgba(5, 150, 105, 0.25);
+}
+
+.message.error {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  border-left: 4px solid #ef4444;
+  box-shadow: 0 8px 32px rgba(220, 38, 38, 0.25);
+}
+
+.message-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.message-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  opacity: 0.95;
+}
+
+.message-text {
+  flex: 1;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  letter-spacing: 0.01em;
+}
+
+/* Уведомление о неизвестном товаре */
+.unknown-product-notice.minimal {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+}
+
+.notice-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.notice-text {
+  flex: 1;
+  cursor: default !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+.notice-text strong {
+  color: #92400e;
+  font-size: 16px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+  cursor: default !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+.notice-text p {
+  color: #a16207;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.4;
+  cursor: default !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+/* Стили для неизвестных товаров */
+.unknown-product-options.minimal {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.barcode-display.minimal {
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 12px;
+  word-break: break-all;
+  cursor: default !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+.print-options.minimal {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.print-option-btn.minimal {
+  padding: 10px 16px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.print-option-btn.minimal * {
+  cursor: default !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+.print-option-btn.minimal {
+  cursor: default !important;
+  user-select: none !important;
+}
+
+.print-option-btn.minimal:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.print-option-btn.minimal:active {
+  transform: translateY(0);
+}
+
+/* Настройки печати */
+.print-settings {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.print-settings h3 {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  margin-bottom: 16px !important;
+}
+
+.print-type-selector {
+  display: flex;
+  gap: 12px;
+}
+
+.print-type-option {
+  flex: 1;
+  cursor: pointer;
+  display: block;
+}
+
+.print-type-option input[type="radio"] {
+  display: none;
+}
+
+.option-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.option-content:hover {
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+  border-color: #94a3b8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.print-type-option input[type="radio"]:checked + .option-content {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-color: #dc2626;
+  color: white;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
+}
+
+.print-type-option input[type="radio"]:checked + .option-content:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+}
+
+.option-icon {
+  font-size: 18px;
+}
+
+.option-text {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Стили для опции печати штрихкода */
+.no-results-container.minimal {
+  text-align: center;
+}
+
+.print-barcode-option.minimal {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.print-barcode-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+}
+
+.print-barcode-notice .notice-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.print-barcode-notice .notice-text {
+  flex: 1;
+}
+
+.print-barcode-notice .notice-text strong {
+  color: #92400e;
+  font-size: 16px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.print-barcode-notice .notice-text p {
+  color: #a16207;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.print-barcode-options {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.print-barcode-btn.minimal {
+  padding: 12px 20px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.print-barcode-btn.minimal:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.print-barcode-btn.minimal:active {
+  transform: translateY(0);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .app {
+    padding: 15px;
+  }
+  
+  .app-header h1 {
+    font-size: 2rem;
+  }
+  
+  .settings-button {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .search-form {
+    flex-direction: column;
+  }
+  
+  .barcode-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .barcode-row {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .barcode-row .label {
+    min-width: auto;
+  }
+  
+  .barcode-row .value {
+    text-align: left;
+  }
+
+  .product-list-container {
+  margin: 20px auto;
+  width: 90%;
+  max-width: 800px;
+  font-family: Arial, sans-serif;
+}
+
+/* Улучшенные стили для модального окна настроек */
+.file-actions {
+  margin-top: 20px;
+}
+
+.btn-icon {
+  margin-right: 8px;
+}
+
+.file-requirements {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.requirement-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  color: #000000;
+  font-weight: 700;
+}
+
+.requirement-icon {
+  font-size: 1.2rem;
+  opacity: 1;
+}
+
+.requirement-item span {
+  color: #000000;
+  font-weight: 700;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.file-info-display {
+  margin: 15px 0;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.file-info-display p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.sap-header {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.sap-article {
+  font-weight: bold;
+  color: #2c7be5;
+}
+
+.buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.product-button {
+  background-color: #f0f4f8;
+  border: 1px solid #2c7be5;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: 500;
+}
+
+/* Исправления для видимости и курсора */
+.requirement-item {
+  cursor: default !important;
+  user-select: none;
+  pointer-events: none;
+}
+
+.requirement-item span {
+  cursor: default !important;
+  user-select: none;
+  pointer-events: none;
+}
+
+.file-info {
+  cursor: default !important;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Улучшенная видимость текста */
+.upload-area h3 {
+  color: #1e293b !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.upload-area p {
+  color: #374151 !important;
+  font-weight: 500 !important;
+}
+
+.requirement-item {
+  color: #1f2937 !important;
+  font-weight: 600 !important;
+}
+
+.requirement-item span {
+  color: #1f2937 !important;
+  font-weight: 600 !important;
+}
+
+.product-button:hover {
+  background-color: #2c7be5;
+  color: #fff;
+}
+
+.loading {
+  font-style: italic;
+  color: #555;
+}
+
+.no-results {
+  color: #d9534f;
+  font-weight: bold;
+}
+
+/* Дополнительные улучшения видимости */
+.requirement-icon {
+  font-size: 1.1rem !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.file-requirements {
+  margin-top: 20px !important;
+}
+
+.requirement-item {
+  margin-bottom: 8px !important;
+}
+
+/* КРИТИЧЕСКИЕ ИСПРАВЛЕНИЯ ВИДИМОСТИ */
+.upload-area .requirement-item {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+}
+
+.upload-area .requirement-item span {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+.upload-area .requirement-icon {
+  font-size: 1.2rem !important;
+  opacity: 1 !important;
+}
+}
+
+/* ВЕРСИЯ CSS: 2024-12-29 - ПРИНУДИТЕЛЬНОЕ ОБНОВЛЕНИЕ */
+
+/* СУПЕР СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ ТЕКСТА ТРЕБОВАНИЙ */
+.modal-content .upload-area .file-requirements .requirement-item {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+}
+
+.modal-content .upload-area .file-requirements .requirement-item span {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+.modal-content .upload-area .file-requirements .requirement-item .requirement-icon {
+  font-size: 1.2rem !important;
+  opacity: 1 !important;
+}
+
+/* ИСПРАВЛЕНИЕ КУРСОРА - УБИРАЕМ МИГАНИЕ */
+.settings-button,
+.settings-button *,
+.modal-header,
+.modal-header *,
+.header-content,
+.header-content *,
+.header-icon,
+.close-button {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  cursor: pointer !important;
+}
+
+/* Убираем text cursor с иконок */
+.upload-icon,
+.requirement-icon {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* Убираем text cursor с кнопок */
+.delete-file-btn,
+.btn-icon {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* ОТКЛЮЧАЕМ ВСЕ АНИМАЦИИ И МИГАНИЯ */
+.settings-modal *,
+.settings-modal *:before,
+.settings-modal *:after {
+  animation: none !important;
+  transition: none !important;
+  -webkit-animation: none !important;
+  -webkit-transition: none !important;
+  -moz-animation: none !important;
+  -moz-transition: none !important;
+  -ms-animation: none !important;
+  -ms-transition: none !important;
+}
+
+/* УБИРАЕМ TEXT CURSOR С ВСЕХ ЭЛЕМЕНТОВ МОДАЛЬНОГО ОКНА */
+.settings-modal,
+.settings-modal *,
+.settings-modal h1,
+.settings-modal h2,
+.settings-modal h3,
+.settings-modal p,
+.settings-modal div,
+.settings-modal span {
+  cursor: default !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* ПРАВИЛЬНЫЙ КУРСОР ДЛЯ КЛИКАБЕЛЬНЫХ ЭЛЕМЕНТОВ */
+.settings-modal .upload-area,
+.settings-modal .delete-file-btn,
+.settings-modal .close-button,
+.settings-modal button {
+  cursor: pointer !important;
+}
+
+/* УБИРАЕМ TEXT CURSOR С УВЕДОМЛЕНИЙ И СТАТУСОВ */
+.settings-modal .status-success,
+.settings-modal .status-success *,
+.settings-modal .file-status,
+.settings-modal .file-status *,
+.settings-modal .file-actions,
+.settings-modal .file-actions *,
+.settings-modal .requirement-item,
+.settings-modal .requirement-item *,
+.settings-modal .file-requirements,
+.settings-modal .file-requirements * {
+  cursor: default !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* Убираем мигание с drag & drop области */
+.upload-area {
+  animation: none !important;
+  transition: none !important;
+}
+
+.upload-area:hover,
+.upload-area.dragging {
+  animation: none !important;
+  transition: none !important;
+}

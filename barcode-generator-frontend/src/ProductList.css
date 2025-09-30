@@ -1,0 +1,482 @@
+/* Dark theme palette */
+:root {
+  --accent: #C3073F;
+  --accent-strong: #950740;
+  --accent-muted: #6F2232;
+  --text-primary: #F5F5F6;
+  --text-secondary: #B5B5B9;
+  --border: #3A3A3F;
+  --surface: #2A2A2E;
+}
+
+/* -------- Minimal overrides for Sberlogistics plain UI -------- */
+.product-list-container.minimal {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  position: static;
+  overflow: visible;
+  margin: 12px 0;
+}
+
+.product-list-container.minimal::before { display: none; }
+
+.results-summary.minimal {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  background: #1F1F22;
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  cursor: default !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+.buttons-container.minimal {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.product-card.minimal {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.product-button.minimal {
+  background: #1F1F22;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease, transform .2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.product-button.minimal::before { 
+  content: '🖨️'; 
+  position: absolute; 
+  top: 8px; 
+  right: 8px; 
+  opacity: 0; 
+  transition: opacity .2s ease; 
+  font-size: 0.8rem; 
+}
+.product-button.minimal:hover { 
+  border-color: var(--accent); 
+  background: #242428; 
+  box-shadow: 0 4px 12px rgba(195, 7, 63, 0.15), 0 2px 6px rgba(0,0,0,0.35); 
+  transform: translateY(-2px); 
+}
+.product-button.minimal:hover::before { 
+  opacity: 1; 
+}
+.product-button.minimal:active { 
+  background: #1a1a1d; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25); 
+  transform: translateY(0); 
+}
+
+/* Enter animation for cards */
+.product-button { animation: fadeInUp .4s ease both; }
+.buttons-container.minimal .product-button:nth-child(1) { animation-delay: .05s; }
+.buttons-container.minimal .product-button:nth-child(2) { animation-delay: .1s; }
+.buttons-container.minimal .product-button:nth-child(3) { animation-delay: .15s; }
+.buttons-container.minimal .product-button:nth-child(4) { animation-delay: .2s; }
+.buttons-container.minimal .product-button:nth-child(5) { animation-delay: .25s; }
+
+.button-content.minimal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: default !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+.ean-code.minimal {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  cursor: default !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+.counter-badge.minimal {
+  background: var(--accent);
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: auto;
+  text-align: center;
+  cursor: default !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+.loading.minimal {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  padding: 8px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  background: #1F1F22;
+}
+
+.no-results.minimal {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  padding: 8px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  background: #1F1F22;
+}
+
+.copy-hint { display: none; }
+.copy-toast.minimal { margin-top: 8px; text-align: center; font-size: 0.9rem; color: var(--text-secondary); }
+
+
+.sber-badge { display: none; }
+
+.product-list-container {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 20px 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.product-list-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent);
+}
+
+.sap-header {
+  color: var(--text-primary);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.sap-article {
+  background: var(--accent);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 12px;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.buttons-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.product-button {
+  background: linear-gradient(135deg, #1F1F22 0%, #232327 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: left;
+}
+
+.product-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(195, 7, 63, 0.08), transparent);
+  transition: left 0.6s;
+}
+
+.product-button:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(135deg, #212125 0%, #26262B 100%);
+}
+
+.product-button:hover::before {
+  left: 100%;
+}
+
+.product-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.product-button.copied {
+  border-color: var(--accent-strong);
+  background: linear-gradient(135deg, #261318 0%, #2B1B21 100%);
+  animation: sberPulse 0.6s ease-in-out;
+}
+
+@keyframes sberPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.4); }
+  50% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(0, 200, 83, 0); }
+  100% { transform: scale(1); }
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--accent);
+  font-weight: 600;
+  padding: 60px 40px;
+  background: var(--surface);
+  border-radius: 16px;
+  margin: 20px 0;
+  border: 2px dashed var(--border);
+  font-family: 'SF Pro Display', sans-serif;
+}
+
+.loading::before {
+  content: '⏳';
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 16px;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.no-results {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  padding: 60px 40px;
+  background: var(--surface);
+  border-radius: 16px;
+  margin: 20px 0;
+  border: 2px dashed var(--border);
+  font-family: 'SF Pro Display', sans-serif;
+}
+
+.no-results::before {
+  content: '🔍';
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.search-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: linear-gradient(135deg, #F0F4FF 0%, #E8F2FF 100%);
+  border-radius: 12px;
+  border-left: 4px solid var(--sber-primary);
+  font-family: 'SF Pro Text', sans-serif;
+}
+
+.search-icon {
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+
+.product-counter {
+  background: var(--sber-green);
+  color: white;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.ean-code {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'SF Mono', 'Courier New', monospace;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.product-description {
+  font-size: 0.9rem;
+  color: var(--sber-text-secondary);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.product-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.counter-badge {
+  background: var(--sber-primary);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 60px;
+  text-align: center;
+}
+
+.packaging-badge {
+  background: var(--sber-green);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.copy-hint {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--sber-text-primary);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+  font-family: 'SF Pro Text', sans-serif;
+}
+
+.product-button:hover .copy-hint {
+  opacity: 1;
+}
+
+/* Анимации */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-list-container {
+  animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-button {
+  animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+.product-button:nth-child(1) { animation-delay: 0.1s; }
+.product-button:nth-child(2) { animation-delay: 0.2s; }
+.product-button:nth-child(3) { animation-delay: 0.3s; }
+.product-button:nth-child(4) { animation-delay: 0.4s; }
+.product-button:nth-child(5) { animation-delay: 0.5s; }
+
+/* СберЛогистика бейдж */
+.sber-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: linear-gradient(135deg, var(--sber-primary), var(--sber-dark));
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'SF Pro Text', sans-serif;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .product-list-container {
+    padding: 20px;
+    margin: 16px 0;
+    border-radius: 12px;
+  }
+  
+  .sap-header {
+    font-size: 1.2rem;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .buttons-container {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .product-button {
+    padding: 16px;
+  }
+  
+  .search-info {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
+
