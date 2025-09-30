@@ -193,9 +193,9 @@ namespace BarcodeGenerator.Controllers
                 if (found == null)
                     return Ok(new { Sap = string.Empty, RelatedProducts = new List<Product>() });
                 var sap = found.SapArticle;
-                // Группируем по количеству штук и берем по одному товару на каждое количество
-                var related = _db.Products
-                    .Where(p => p.SapArticle == sap)
+                // Получаем все товары и группируем в памяти по количеству штук
+                var allProducts = _db.Products.Where(p => p.SapArticle == sap).ToList();
+                var related = allProducts
                     .GroupBy(p => p.Counter)
                     .Select(g => g.First())
                     .OrderBy(p => p.Counter)
@@ -218,9 +218,9 @@ namespace BarcodeGenerator.Controllers
 
             try
             {
-                // Группируем по количеству штук и берем по одному товару на каждое количество
-                var relatedProducts = _db.Products
-                    .Where(p => p.SapArticle == sap)
+                // Получаем все товары и группируем в памяти по количеству штук
+                var allProducts = _db.Products.Where(p => p.SapArticle == sap).ToList();
+                var relatedProducts = allProducts
                     .GroupBy(p => p.Counter)
                     .Select(g => g.First())
                     .OrderBy(p => p.Counter)
