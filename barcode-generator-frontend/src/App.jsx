@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import SettingsButton from './components/SettingsButton';
 import SettingsModal from './components/SettingsModal';
 import SearchSection from './components/SearchSection';
@@ -50,7 +50,7 @@ function App() {
     }
   };
 
-const handleSearch = async (searchValue, searchType = 'barcode') => {
+const handleSearch = useCallback(async (searchValue, searchType = 'barcode') => {
   if (!searchValue.trim()) {
     setFilteredProducts([]);
     setSearchedBarcode('');
@@ -113,18 +113,20 @@ const handleSearch = async (searchValue, searchType = 'barcode') => {
   } finally {
     setIsSearching(false);
   }
-};
+}, [allProducts]);
 
 
-  const handleFileUpload = (uploadedProducts, successMessage) => {
+  const handleFileUpload = useCallback((uploadedProducts, successMessage) => {
     const productsArray = Array.isArray(uploadedProducts) ? uploadedProducts : [];
     setAllProducts(productsArray);
     setHasFile(true);
     setMessage(successMessage);
     setTimeout(() => setMessage(''), 3000);
-  };
+    // Очищаем кэш при загрузке нового файла
+    excelAPI.invalidateCache();
+  }, []);
 
-  const handleFileDelete = (successMessage) => {
+  const handleFileDelete = useCallback((successMessage) => {
     setAllProducts([]);
     setFilteredProducts([]);
     setSearchedBarcode('');
@@ -132,32 +134,40 @@ const handleSearch = async (searchValue, searchType = 'barcode') => {
     setHasFile(false);
     setMessage(successMessage);
     setTimeout(() => setMessage(''), 3000);
-  };
+    // Очищаем кэш при удалении файла
+    excelAPI.invalidateCache();
+  }, []);
 
-  const handlePrintTypeChange = (newPrintType) => {
+  const handlePrintTypeChange = useCallback((newPrintType) => {
     setDefaultPrintType(newPrintType);
     const typeName = newPrintType === 'qr' ? 'QR-код' : 'Code-128';
     setMessage(`Настройка печати изменена на ${typeName}`);
     setTimeout(() => setMessage(''), 3000);
-  };
+  }, []);
 
-  const handleQrSizeChange = (newSize) => {
+  const handleQrSizeChange = useCallback((newSize) => {
     setQrSize(newSize);
     setMessage(`Размер QR-кода изменен на ${newSize}px`);
     setTimeout(() => setMessage(''), 3000);
-  };
+  }, []);
 
-  const handleCode128SizeChange = (newSize) => {
+  const handleCode128SizeChange = useCallback((newSize) => {
     setCode128Size(newSize);
     setMessage(`Размер Code-128 изменен на ${newSize.width}x${newSize.height}px`);
     setTimeout(() => setMessage(''), 3000);
-  };
+  }, []);
 
-  const handleTextSizeChange = (newSize) => {
+  const handleTextSizeChange = useCallback((newSize) => {
     setTextSize(newSize);
     setMessage(`Размер текста изменен на ${newSize}px`);
     setTimeout(() => setMessage(''), 3000);
-  };
+  }, []);
+
+  // Мемоизируем определение типа сообщения
+  const messageType = useMemo(() => {
+    if (!message) return '';
+    return message.includes('загружено') || message.includes('удален') || message.includes('изменена') || message.includes('изменен') ? 'success' : 'error';
+  }, [message]);
 
   return (
     <div className="app">
@@ -185,10 +195,10 @@ const handleSearch = async (searchValue, searchType = 'barcode') => {
         />
 
         {message && (
-          <div className={`message ${message.includes('загружено') || message.includes('удален') || message.includes('изменена') || message.includes('изменен') ? 'success' : 'error'}`}>
+          <div className={`message ${messageType}`}>
             <div className="message-content">
               <span className="message-icon">
-                {message.includes('загружено') || message.includes('удален') || message.includes('изменена') || message.includes('изменен') ? '✅' : '❌'}
+                {messageType === 'success' ? '✅' : '❌'}
               </span>
               <span className="message-text">{message}</span>
             </div>

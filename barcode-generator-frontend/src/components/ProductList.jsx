@@ -1,22 +1,26 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import "../ProductList.css";
 
 const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, defaultPrintType = 'qr', qrSize = 500, code128Size = { width: 500, height: 200 }, textSize = 10 }) => {
-  const handleBarcodeClick = (product, barcodeType = 'qr') => {
-    // Создаем скрытый iframe для печати
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'absolute';
-    iframe.style.left = '-9999px';
-    iframe.style.top = '-9999px';
-    iframe.style.width = '1px';
-    iframe.style.height = '1px';
-    document.body.appendChild(iframe);
+  // Мемоизируем функцию печати
+  const handleBarcodeClick = useCallback((product, barcodeType = 'qr') => {
+    // Используем более эффективный подход - создаем новое окно вместо iframe
+    const printWindow = window.open('', '_blank', 'width=1,height=1');
+    
+    if (!printWindow) {
+      console.error('Не удалось открыть окно для печати');
+      return;
+    }
+
+    const barcodeUrl = barcodeType === 'qr' 
+      ? `https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${encodeURIComponent(product.ean)}`
+      : `https://barcode.tec-it.com/barcode.ashx?data=${encodeURIComponent(product.ean)}&code=Code128&translate-esc=on&eclevel=L&width=${code128Size.width}&height=${code128Size.height}&showtext=0`;
     
     const printContent = `
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Печать QR-кода</title>
+          <title>Печать штрихкода</title>
           <style>
             body { 
               font-family: Arial, sans-serif; 
@@ -81,16 +85,10 @@ const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, default
         <body>
           <div class="print-container">
             <div class="barcode-container">
-              ${barcodeType === 'qr' ? 
-                `<img src="https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${encodeURIComponent(product.ean)}&t=${Date.now()}" 
-                     alt="QR Code" 
-                     onload="console.log('✅ QR код загружен через QR Server API (ProductList)');"
-                     onerror="console.log('❌ Ошибка QR Server API (ProductList)');" />` :
-                `<img src="https://barcode.tec-it.com/barcode.ashx?data=${encodeURIComponent(product.ean)}&code=Code128&translate-esc=on&eclevel=L&width=${code128Size.width}&height=${code128Size.height}&showtext=0&t=${Date.now()}" 
-                     alt="Code-128" 
-                     onload="console.log('✅ Code-128 загружен через TEC-IT API (ProductList)');"
-                     onerror="console.log('❌ Ошибка TEC-IT API (ProductList)');" />`
-              }
+              <img src="${barcodeUrl}" 
+                   alt="${barcodeType === 'qr' ? 'QR Code' : 'Code-128'}" 
+                   onload="window.print(); window.close();"
+                   onerror="console.log('Ошибка загрузки изображения'); window.close();" />
             </div>
             <div class="product-info">
               <div class="barcode">${product.ean}</div>
@@ -103,29 +101,15 @@ const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, default
       </html>
     `;
     
-    iframe.contentDocument.write(printContent);
-    iframe.contentDocument.close();
-    
-    // Ждем загрузки страницы и изображения
-    iframe.onload = () => {
-      const img = iframe.contentDocument.querySelector('img');
-      if (img.complete) {
-        // Изображение уже загружено
-        iframe.contentWindow.print();
-        setTimeout(() => {
-          document.body.removeChild(iframe);
-        }, 1000);
-      } else {
-        // Ждем загрузки изображения
-        img.onload = () => {
-          iframe.contentWindow.print();
-          setTimeout(() => {
-            document.body.removeChild(iframe);
-          }, 1000);
-        };
-      }
-    };
-  };
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+  }, [qrSize, code128Size, textSize]);
+
+  // Мемоизируем проверку неизвестных товаров
+  const hasUnknownProducts = useMemo(() => 
+    products.some(product => product.isUnknown), 
+    [products]
+  );
 
   if (isLoading) {
     return (
@@ -140,9 +124,6 @@ const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, default
       <div className="no-results minimal">Ничего не найдено</div>
     );
   }
-
-  // Проверяем, есть ли неизвестные товары
-  const hasUnknownProducts = products.some(product => product.isUnknown);
 
   return (
     <div className="product-list-container minimal">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
 const SearchSection = ({ onSearch, isSearching }) => {
   const [searchValue, setSearchValue] = useState('');
@@ -23,7 +23,8 @@ const SearchSection = ({ onSearch, isSearching }) => {
     };
   }, [searchValue]);
 
-  const detectSearchType = (value) => {
+  // Мемоизируем функцию определения типа поиска
+  const detectSearchType = useCallback((value) => {
     const trimmedValue = value.trim();
     
     // Если содержит только цифры и длина больше 12 - скорее всего штрихкод
@@ -43,9 +44,9 @@ const SearchSection = ({ onSearch, isSearching }) => {
     
     // По умолчанию считаем штрихкодом
     return 'barcode';
-  };
+  }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     if (searchValue.trim()) {
       const searchType = detectSearchType(searchValue);
@@ -53,32 +54,31 @@ const SearchSection = ({ onSearch, isSearching }) => {
       // Очищаем поле ввода после поиска
       setSearchValue('');
     }
-  };
+  }, [searchValue, detectSearchType, onSearch]);
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = useCallback((e) => {
     // Автоматический поиск при нажатии Enter
     if (e.key === 'Enter') {
       handleSubmit(e);
     }
-  };
+  }, [handleSubmit]);
 
-
-  const clearSearch = () => {
+  const clearSearch = useCallback(() => {
     setSearchValue('');
     onSearch('');
     // Возвращаем фокус в поле ввода после очистки
     const input = document.getElementById('barcode-input');
     if (input) input.focus();
-  };
+  }, [onSearch]);
 
-  const handleFormClick = (e) => {
+  const handleFormClick = useCallback((e) => {
     // При клике по области формы ставим фокус в инпут, кроме кликов по кнопкам
     const isButton = e.target.closest('button');
     if (!isButton) {
       const input = document.getElementById('barcode-input');
       input && input.focus();
     }
-  };
+  }, []);
 
   return (
     <div className="search-section minimal container">
