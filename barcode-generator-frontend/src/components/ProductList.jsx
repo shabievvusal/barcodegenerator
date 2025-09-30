@@ -89,11 +89,11 @@ const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, default
           <div class="print-container">
             <div class="barcode-container">
               ${barcodeType === 'qr' ? 
-                `<img src="https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${encodeURIComponent(product.ean)}" 
+                `<img src="https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${encodeURIComponent(product.ean)}&t=${Date.now()}" 
                      alt="QR Code" 
                      onload="console.log('✅ QR код загружен через QR Server API (ProductList)');"
                      onerror="console.log('❌ Ошибка QR Server API (ProductList)');" />` :
-                `<img src="https://barcode.tec-it.com/barcode.ashx?data=${encodeURIComponent(product.ean)}&code=Code128&translate-esc=on&eclevel=L&width=${code128Size.width}&height=${code128Size.height}&showtext=0" 
+                `<img src="https://barcode.tec-it.com/barcode.ashx?data=${encodeURIComponent(product.ean)}&code=Code128&translate-esc=on&eclevel=L&width=${code128Size.width}&height=${code128Size.height}&showtext=0&t=${Date.now()}" 
                      alt="Code-128" 
                      onload="console.log('✅ Code-128 загружен через TEC-IT API (ProductList)');"
                      onerror="console.log('❌ Ошибка TEC-IT API (ProductList)');" />`

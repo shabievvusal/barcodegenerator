@@ -910,8 +910,8 @@ body {
 }
 
 .size-label span {
-  font-weight: 500;
-  color: var(--text-primary);
+  font-weight: 600;
+  color: #000000;
 }
 
 .size-input {

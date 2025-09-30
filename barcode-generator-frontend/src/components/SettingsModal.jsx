@@ -130,7 +130,7 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
         <div className="modal-header">
           <div className="header-content">
             <div className="header-icon">📊</div>
-            <h2>Управление Excel файлом</h2>
+            <h2>Настройки</h2>
           </div>
           <button className="close-button" onClick={onClose}>×</button>
         </div>
