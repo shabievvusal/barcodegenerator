@@ -41,14 +41,7 @@ const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, default
             }
             .barcode-container img {
               max-width: 100%;
-            }
-            .barcode-container img[alt="QR Code"] {
-              width: 50mm;
-              height: 50mm;
-            }
-            .barcode-container img[alt="Code-128"] {
-              width: 50mm;
-              height: 20mm;
+              height: auto;
             }
             .product-info {
               margin: 2mm 0;
