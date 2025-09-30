@@ -173,25 +173,15 @@ const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, default
         {products.map((product, index) => (
           <div key={`${product.ean}-${index}`} className="product-card minimal">
             {product.isUnknown ? (
-              <div className="unknown-product-options minimal">
-                <div className="barcode-display minimal">{product.ean}</div>
-                <div className="print-options minimal">
-                  <button
-                    className="print-option-btn minimal"
-                    onClick={() => handleBarcodeClick(product, 'qr')}
-                    title="Печать QR-кода"
-                  >
-                    📱 QR-код
-                  </button>
-                  <button
-                    className="print-option-btn minimal"
-                    onClick={() => handleBarcodeClick(product, 'code128')}
-                    title="Печать Code-128"
-                  >
-                    📊 Code-128
-                  </button>
+              <button
+                className="product-button minimal"
+                onClick={() => handleBarcodeClick(product, 'code128')}
+                title="Клик для печати штрихкода"
+              >
+                <div className="button-content minimal">
+                  <div className="ean-code minimal">{product.ean}</div>
                 </div>
-              </div>
+              </button>
             ) : (
               <button
                 className="product-button minimal"
