@@ -195,6 +195,7 @@ namespace BarcodeGenerator.Controllers
                 var filePath = excelFiles[0];
                 // Поиск по EAN в БД (нормализуем как раньше)
                 var normalized = barcode.Replace(" ", "").Replace("-", "").Trim().ToUpperInvariant();
+                // Строгое совпадение по нормализованному EAN
                 var found = _db.Products.FirstOrDefault(p => p.EAN == normalized);
                 if (found == null)
                     return Ok(new { Sap = string.Empty, RelatedProducts = new List<Product>() });
