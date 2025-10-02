@@ -1,7 +1,60 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef, useEffect } from 'react';
 import "../ProductList.css";
 
-const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, defaultPrintType = 'qr', qrSize = 500, code128Size = { width: 500, height: 200 }, textSize = 10 }) => {
+// Кэш для штрихкодов
+const barcodeCache = new Map();
+const CACHE_EXPIRY = 30 * 60 * 1000; // 30 минут
+
+// Функция для создания ключа кэша
+const createCacheKey = (ean, type, size) => {
+  if (type === 'qr') {
+    return `qr_${ean}_${size}`;
+  } else {
+    return `code128_${ean}_${size.width}x${size.height}`;
+  }
+};
+
+// Функция для проверки валидности кэша
+const isCacheValid = (timestamp) => {
+  return Date.now() - timestamp < CACHE_EXPIRY;
+};
+
+// Функция для предзагрузки изображения
+const preloadImage = (url) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(url);
+    img.onerror = reject;
+    img.src = url;
+  });
+};
+
+const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, defaultPrintType = 'qr', qrSize = 500, code128Size = { width: 500, height: 200 }, textSize = 10, preloadBarcodes = true }) => {
+  // Функция получения URL штрихкода с кэшированием
+  const getBarcodeUrl = useCallback((ean, type, currentQrSize, currentCode128Size) => {
+    const size = type === 'qr' ? currentQrSize : currentCode128Size;
+    const cacheKey = createCacheKey(ean, type, size);
+    
+    // Проверяем кэш
+    const cached = barcodeCache.get(cacheKey);
+    if (cached && isCacheValid(cached.timestamp)) {
+      return cached.url;
+    }
+    
+    // Создаем URL
+    const url = type === 'qr' 
+      ? `https://api.qrserver.com/v1/create-qr-code/?size=${currentQrSize}x${currentQrSize}&data=${encodeURIComponent(ean)}`
+      : `https://barcode.tec-it.com/barcode.ashx?data=${encodeURIComponent(ean)}&code=Code128&translate-esc=on&eclevel=L&width=${currentCode128Size.width}&height=${currentCode128Size.height}&showtext=0`;
+    
+    // Сохраняем в кэш
+    barcodeCache.set(cacheKey, {
+      url,
+      timestamp: Date.now()
+    });
+    
+    return url;
+  }, []);
+
   // Мемоизируем функцию печати
   const handleBarcodeClick = useCallback((product, barcodeType = 'qr') => {
     // Создаем скрытый iframe для печати в том же окне
@@ -13,9 +66,7 @@ const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, default
     iframe.style.height = '1px';
     document.body.appendChild(iframe);
     
-    const barcodeUrl = barcodeType === 'qr' 
-      ? `https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${encodeURIComponent(product.ean)}`
-      : `https://barcode.tec-it.com/barcode.ashx?data=${encodeURIComponent(product.ean)}&code=Code128&translate-esc=on&eclevel=L&width=${code128Size.width}&height=${code128Size.height}&showtext=0`;
+    const barcodeUrl = getBarcodeUrl(product.ean, barcodeType, qrSize, code128Size);
     
     const printContent = `
       <!DOCTYPE html>
@@ -124,13 +175,28 @@ const ProductList = ({ products, sapArticle, searchedBarcode, isLoading, default
         };
       }
     };
-  }, [qrSize, code128Size, textSize]);
+  }, [getBarcodeUrl, qrSize, code128Size, textSize]);
 
   // Мемоизируем проверку неизвестных товаров
   const hasUnknownProducts = useMemo(() => 
     products.some(product => product.isUnknown), 
     [products]
   );
+
+  // Предзагрузка штрихкодов для найденных товаров
+  useEffect(() => {
+    if (preloadBarcodes && products.length > 0 && products.length <= 10) { // Предзагружаем только если включено и для небольшого количества товаров
+      products.forEach(product => {
+        if (!product.isUnknown) {
+          // Предзагружаем для текущего типа печати
+          const url = getBarcodeUrl(product.ean, defaultPrintType, qrSize, code128Size);
+          preloadImage(url).catch(() => {
+            console.log(`Не удалось предзагрузить штрихкод для ${product.ean}`);
+          });
+        }
+      });
+    }
+  }, [preloadBarcodes, products, defaultPrintType, qrSize, code128Size, getBarcodeUrl]);
 
   if (isLoading) {
     return (

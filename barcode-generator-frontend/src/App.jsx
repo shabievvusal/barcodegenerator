@@ -20,6 +20,7 @@ function App() {
   const [code128Size, setCode128Size] = useState({ width: 500, height: 200 }); // размер Code-128
   const [textSize, setTextSize] = useState(10); // размер текста
   const [animationsEnabled, setAnimationsEnabled] = useState(true); // включены ли анимации
+  const [preloadBarcodes, setPreloadBarcodes] = useState(true); // предзагрузка штрихкодов
 
   useEffect(() => {
     checkFileStatus();
@@ -43,6 +44,7 @@ function App() {
             document.body.classList.add('no-animations');
           }
         }
+        if (settings.preloadBarcodes !== undefined) setPreloadBarcodes(settings.preloadBarcodes);
         console.log('✅ Настройки загружены при запуске');
       }
     } catch (error) {
@@ -201,6 +203,12 @@ const handleSearch = useCallback(async (searchValue, searchType = 'barcode') => 
     }
   }, []);
 
+  const handlePreloadToggle = useCallback((enabled) => {
+    setPreloadBarcodes(enabled);
+    setMessage(`Предзагрузка штрихкодов ${enabled ? 'включена' : 'отключена'}`);
+    setTimeout(() => setMessage(''), 3000);
+  }, []);
+
   // Мемоизируем определение типа сообщения
   const messageType = useMemo(() => {
     if (!message) return '';
@@ -230,6 +238,7 @@ const handleSearch = useCallback(async (searchValue, searchType = 'barcode') => 
           qrSize={qrSize}
           code128Size={code128Size}
           textSize={textSize}
+          preloadBarcodes={preloadBarcodes}
         />
 
         {message && (
@@ -265,6 +274,8 @@ const handleSearch = useCallback(async (searchValue, searchType = 'barcode') => 
         onTextSizeChange={handleTextSizeChange}
         animationsEnabled={animationsEnabled}
         onAnimationsToggle={handleAnimationsToggle}
+        preloadBarcodes={preloadBarcodes}
+        onPreloadToggle={handlePreloadToggle}
       />
     </div>
   );
