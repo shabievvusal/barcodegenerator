@@ -19,6 +19,7 @@ function App() {
   const [qrSize, setQrSize] = useState(500); // размер QR-кода
   const [code128Size, setCode128Size] = useState({ width: 500, height: 200 }); // размер Code-128
   const [textSize, setTextSize] = useState(10); // размер текста
+  const [animationsEnabled, setAnimationsEnabled] = useState(true); // включены ли анимации
 
   useEffect(() => {
     checkFileStatus();
@@ -33,6 +34,7 @@ function App() {
         if (settings.qrSize) setQrSize(settings.qrSize);
         if (settings.code128Size) setCode128Size(settings.code128Size);
         if (settings.textSize) setTextSize(settings.textSize);
+        if (settings.animationsEnabled !== undefined) setAnimationsEnabled(settings.animationsEnabled);
         console.log('✅ Настройки загружены при запуске');
       }
     } catch (error) {
@@ -178,6 +180,12 @@ const handleSearch = useCallback(async (searchValue, searchType = 'barcode') => 
     setTimeout(() => setMessage(''), 3000);
   }, []);
 
+  const handleAnimationsToggle = useCallback((enabled) => {
+    setAnimationsEnabled(enabled);
+    setMessage(`Анимации ${enabled ? 'включены' : 'отключены'}`);
+    setTimeout(() => setMessage(''), 3000);
+  }, []);
+
   // Мемоизируем определение типа сообщения
   const messageType = useMemo(() => {
     if (!message) return '';
@@ -185,7 +193,7 @@ const handleSearch = useCallback(async (searchValue, searchType = 'barcode') => 
   }, [message]);
 
   return (
-    <div className="app">
+    <div className={`app ${!animationsEnabled ? 'no-animations' : ''}`}>
       <header className="app-header">
         <h1>
           СберЛогистика · Печать ШК
@@ -240,6 +248,8 @@ const handleSearch = useCallback(async (searchValue, searchType = 'barcode') => 
         onCode128SizeChange={handleCode128SizeChange}
         textSize={textSize}
         onTextSizeChange={handleTextSizeChange}
+        animationsEnabled={animationsEnabled}
+        onAnimationsToggle={handleAnimationsToggle}
       />
     </div>
   );

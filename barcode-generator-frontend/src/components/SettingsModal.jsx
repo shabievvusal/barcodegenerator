@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { excelAPI } from '../services/api';
 
-const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, defaultPrintType, onPrintTypeChange, qrSize, onQrSizeChange, code128Size, onCode128SizeChange, textSize, onTextSizeChange }) => {
+const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, defaultPrintType, onPrintTypeChange, qrSize, onQrSizeChange, code128Size, onCode128SizeChange, textSize, onTextSizeChange, animationsEnabled, onAnimationsToggle }) => {
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -15,13 +15,14 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
       defaultPrintType,
       qrSize,
       code128Size,
-      textSize
+      textSize,
+      animationsEnabled
     };
     localStorage.setItem('barcodeGeneratorSettings', JSON.stringify(settings));
     console.log('✅ Настройки сохранены');
     setSaveMessage('✅ Настройки сохранены!');
     setTimeout(() => setSaveMessage(''), 3000);
-  }, [defaultPrintType, qrSize, code128Size, textSize]);
+  }, [defaultPrintType, qrSize, code128Size, textSize, animationsEnabled]);
 
   const loadSettings = useCallback(() => {
     try {
@@ -54,6 +55,9 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
         }
         if (savedSettings.textSize && savedSettings.textSize !== textSize) {
           onTextSizeChange(savedSettings.textSize);
+        }
+        if (savedSettings.animationsEnabled !== undefined && savedSettings.animationsEnabled !== animationsEnabled) {
+          onAnimationsToggle(savedSettings.animationsEnabled);
         }
       }
     }
@@ -284,6 +288,70 @@ const SettingsModal = ({ isOpen, onClose, onFileUpload, onFileDelete, hasFile, d
                     onChange={(e) => onTextSizeChange(parseInt(e.target.value))}
                     className="size-input"
                   />
+                </label>
+              </div>
+            </div>
+
+            {/* Настройки производительности */}
+            <div className="performance-settings" style={{marginTop: '20px'}}>
+              <h4 style={{color: '#000000', fontWeight: '600', marginBottom: '12px'}}>⚡ Производительность</h4>
+              <div className="toggle-setting" style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '12px',
+                background: '#f8fafc',
+                borderRadius: '8px',
+                border: '1px solid #e2e8f0'
+              }}>
+                <div>
+                  <span style={{color: '#1e293b', fontWeight: '600', fontSize: '14px'}}>
+                    Анимации
+                  </span>
+                  <p style={{color: '#64748b', fontSize: '12px', margin: '2px 0 0 0'}}>
+                    Отключите для улучшения производительности
+                  </p>
+                </div>
+                <label className="toggle-switch" style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  width: '50px',
+                  height: '24px'
+                }}>
+                  <input
+                    type="checkbox"
+                    checked={animationsEnabled}
+                    onChange={(e) => onAnimationsToggle(e.target.checked)}
+                    style={{
+                      opacity: 0,
+                      width: 0,
+                      height: 0
+                    }}
+                  />
+                  <span style={{
+                    position: 'absolute',
+                    cursor: 'pointer',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: animationsEnabled ? '#10b981' : '#cbd5e1',
+                    transition: 'background-color 0.2s ease',
+                    borderRadius: '24px'
+                  }}>
+                    <span style={{
+                      position: 'absolute',
+                      content: '',
+                      height: '18px',
+                      width: '18px',
+                      left: animationsEnabled ? '29px' : '3px',
+                      bottom: '3px',
+                      backgroundColor: 'white',
+                      transition: 'left 0.2s ease',
+                      borderRadius: '50%',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    }} />
+                  </span>
                 </label>
               </div>
             </div>

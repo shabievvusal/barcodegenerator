@@ -1335,6 +1335,59 @@ body {
   cursor: pointer !important;
 }
 
+/* ОТКЛЮЧЕНИЕ АНИМАЦИЙ ДЛЯ ПОВЫШЕНИЯ ПРОИЗВОДИТЕЛЬНОСТИ */
+.no-animations,
+.no-animations *,
+.no-animations *::before,
+.no-animations *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  transition-delay: 0ms !important;
+}
+
+/* Отключаем анимированный фон */
+.no-animations body {
+  animation: none !important;
+  background: var(--bg) !important;
+}
+
+.no-animations .bg-orb-1,
+.no-animations .bg-orb-2 {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+.no-animations .spinner {
+  animation: none !important;
+  border: 4px solid #e2e8f0 !important;
+  border-left: 4px solid #667eea !important;
+}
+
+.no-animations .message {
+  animation: none !important;
+}
+
+.no-animations .settings-button:hover {
+  transform: none !important;
+}
+
+.no-animations .product-button:hover {
+  transform: none !important;
+}
+
+.no-animations .product-button::before {
+  display: none !important;
+}
+
+.no-animations .save-settings-btn:hover {
+  transform: none !important;
+}
+
+.no-animations .app-header .logo-mark {
+  animation: none !important;
+}
+
 /* Убираем text cursor с иконок */
 .upload-icon,
 .requirement-icon {
