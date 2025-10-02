@@ -34,7 +34,15 @@ function App() {
         if (settings.qrSize) setQrSize(settings.qrSize);
         if (settings.code128Size) setCode128Size(settings.code128Size);
         if (settings.textSize) setTextSize(settings.textSize);
-        if (settings.animationsEnabled !== undefined) setAnimationsEnabled(settings.animationsEnabled);
+        if (settings.animationsEnabled !== undefined) {
+          setAnimationsEnabled(settings.animationsEnabled);
+          // Применяем класс к body сразу при загрузке
+          if (settings.animationsEnabled) {
+            document.body.classList.remove('no-animations');
+          } else {
+            document.body.classList.add('no-animations');
+          }
+        }
         console.log('✅ Настройки загружены при запуске');
       }
     } catch (error) {
@@ -184,6 +192,13 @@ const handleSearch = useCallback(async (searchValue, searchType = 'barcode') => 
     setAnimationsEnabled(enabled);
     setMessage(`Анимации ${enabled ? 'включены' : 'отключены'}`);
     setTimeout(() => setMessage(''), 3000);
+    
+    // Добавляем/убираем класс для body
+    if (enabled) {
+      document.body.classList.remove('no-animations');
+    } else {
+      document.body.classList.add('no-animations');
+    }
   }, []);
 
   // Мемоизируем определение типа сообщения

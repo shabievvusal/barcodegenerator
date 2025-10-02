@@ -1347,7 +1347,11 @@ body {
 }
 
 /* Отключаем анимированный фон */
-.no-animations body {
+.no-animations {
+  animation: none !important;
+}
+
+body.no-animations {
   animation: none !important;
   background: var(--bg) !important;
 }
